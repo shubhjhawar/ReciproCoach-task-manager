@@ -12,6 +12,7 @@ import { Column } from '../../models/column.model';
 import { CommonModule } from '@angular/common';
 import { AddBoxDialogComponent } from '../../components/add-box-dialog/add-box-dialog.component';
 import { BoardComponent } from '../../components/board/board.component';
+import { Task } from '../../models/task.model';
 
 @Component({
   selector: 'app-main-view',
@@ -22,18 +23,25 @@ import { BoardComponent } from '../../components/board/board.component';
 })
 export class MainViewComponent {
 
-  board: Board = new Board('Test Board', [
-    new Column('Ideas', [
-      "some random idea",
-      "This is random",
-      "build"
-    ]),
-    new Column('Ideassfsdfs', [
-      "some random idead",
-      "This is randomasasdasdasdsa",
-      "build asdsa"
-    ])
-  ]);
+  // Create tasks for the 'Ideas' column
+ideasTasks: Task[] = [
+  new Task('some random idea', 'Description for some random idea', new Date(), false),
+  new Task('This is random', 'Description for This is random', new Date(), false),
+  new Task('build', 'Description for build', new Date(), false)
+];
+
+// Create tasks for the 'Ideassfsdfs' column
+ideassfsdfsTasks: Task[] = [
+  new Task('some random idead', 'Description for some random idead', new Date(), false),
+  new Task('This is randomasasdasd asdsa', 'Description for This is randomasasd asdasdsa', new Date(), false),
+  new Task('build asdsa', 'Description for build asdsa', new Date(), false)
+];
+
+// Instantiate the Board object with the provided columns and tasks
+board: Board = new Board('Test Board', [
+  new Column('Ideas', this.ideasTasks),
+  new Column('Ideassfsdfs', this.ideassfsdfsTasks)
+]);
 
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {

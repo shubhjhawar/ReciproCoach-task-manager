@@ -1,13 +1,7 @@
 <div class="bg-gray-100 h-[400px] py-2 px-4">
     <div class="w-full flex justify-between items-center mb-3">
         <h3 class="text-lg font-semibold">{{column.name}}</h3>
-        <button (click)="openTaskDialog()">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24">
-                <rect width="24" height="24" fill="none" />
-                <path fill="black" d="M19 12.998h-6v6h-2v-6H5v-2h6v-6h2v6h6z" />
-            </svg>
-        </button>
-        <!-- <app-add-task-dialog></app-add-task-dialog> -->
+        <app-add-task-dialog (taskAdded)="addTask($event)"></app-add-task-dialog>
     </div>
     <div
     class="tasks-container"
@@ -16,7 +10,7 @@
         [cdkDropListAutoScrollDisabled]="true"
         (cdkDropListDropped)="drop($event)">
         @for (item of column.tasks; track item) {
-          <div class="task px-2 py-3 bg-white mb-2 border-b-[1px] border-black shadow-md" cdkDrag>{{item}}</div>
+          <div class="task px-2 py-3 bg-white mb-2 border-b-[1px] border-black shadow-md" cdkDrag>{{item.heading}}</div>
         }
       </div>
 

@@ -7,7 +7,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {FormsModule} from '@angular/forms';
 import { EventEmitter } from '@angular/core';
 
-
+ 
 @Component({
   selector: 'app-add-box-dialog',
   standalone:true,
@@ -15,7 +15,7 @@ import { EventEmitter } from '@angular/core';
   templateUrl: './add-box-dialog.component.html',
   styleUrls: ['./add-box-dialog.component.css']
 })
-export class AddBoxDialogComponent {
+export class AddBoxDialogComponent {  
   constructor(public dialog: MatDialog) {}
 
   @Output() boxAdded: EventEmitter<any> = new EventEmitter<any>();

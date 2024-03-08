@@ -6,6 +6,8 @@ import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {FormsModule} from '@angular/forms';
 import { EventEmitter } from '@angular/core';
+import { MatDatepickerModule } from "@angular/material/datepicker"
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-add-task-dialog',
@@ -17,41 +19,47 @@ import { EventEmitter } from '@angular/core';
 export class AddTaskDialogComponent {
   constructor(public dialog: MatDialog) {}
 
-  @Output() boxAdded: EventEmitter<any> = new EventEmitter<any>();
+  @Output() taskAdded: EventEmitter<any> = new EventEmitter<any>();
 
   openTaskDialog() {
-    // const dialogRef = this.dialog.open(DialogDataDialog);
+    const dialogRef = this.dialog.open(TaskDialogData);
 
-    // // Subscribe to the emitted event from below
-    // dialogRef.componentInstance.boxAdded.subscribe((boxName: string) => {
-    //   // Re-emit the event
-    //   this.boxAdded.emit(boxName);
-    // });
+    // Subscribe to the emitted event from below
+    dialogRef.componentInstance.taskAdded.subscribe((boxName: string) => {
+      // Re-emit the event
+      this.taskAdded.emit(boxName);
+    });
   }
 }
 
+
 @Component({
-  selector: 'task-dialog-body',
-  templateUrl: './task-dialog-body.html',
+  selector: 'task-dialog-data',
+  templateUrl: 'add-task-dialog-body.html',
   standalone: true,
   imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatFormFieldModule, MatInputModule, FormsModule],
   styleUrls: ['./add-task-dialog.component.css']
 })
-export class DialogDataDialog {
-  boxName = '';
-  @Output() boxAdded: EventEmitter<string> = new EventEmitter<string>();
+export class TaskDialogData {
+  constructor(public dialogRef: MatDialogRef<TaskDialogData>) {}
 
-  constructor(public dialogRef: MatDialogRef<DialogDataDialog>) {}
+  taskFields = {
+    heading: '',
+    description: '',
+    dueDate: '',
+    repeat: ''
+  };
+
+  @Output() taskAdded: EventEmitter<any> = new EventEmitter<any>();
+
 
   onCancelClick(): void {
-    this.dialogRef.close(); // Close the dialog without adding the box
+    this.dialogRef.close();
   }
 
-  onAddClick(): void {
-    if (this.boxName.trim()) {
-      this.boxAdded.emit(this.boxName); // Emit the new box name to the above component
-      this.dialogRef.close(); // Close the dialog after adding the box
-    }
+  onAddTaskClick(): void {
+    this.taskAdded.emit(this.taskFields)
+    this.dialogRef.close();
+
   }
 }
-

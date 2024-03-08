@@ -10,6 +10,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { Column } from '../../models/column.model';
 import { AddTaskDialogComponent } from '../add-task-dialog/add-task-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Task } from '../../models/task.model';
 
 
 @Component({
@@ -17,14 +18,14 @@ import { MatDialog } from '@angular/material/dialog';
   standalone: true,
   imports: [DragDropModule, AddTaskDialogComponent],
   templateUrl: './board.component.html',
-  styleUrl: './board.component.css'
+  styleUrl: './board.component.css',
 })
 export class BoardComponent {
   constructor(private dialog: MatDialog) {}
 
   @Input() column!: Column;
 
-  drop(event: CdkDragDrop<string[]>) {
+  drop(event: CdkDragDrop<Task[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
@@ -38,10 +39,12 @@ export class BoardComponent {
   }
 
   openTaskDialog() {
-    const dialogRef = this.dialog.open(AddTaskDialogComponent);
-    dialogRef.componentInstance.boxAdded.subscribe((boxName: string) => {
-      // Handle the emitted event from the task dialog if needed
-      console.log('Box name emitted:', boxName);
-    });
+    this.dialog.open(AddTaskDialogComponent);
+
+  }
+
+  addTask(task: Task): void {
+    const newTask = new Task(task.heading, task.description, task.dueDate, task.repeat);
+    this.column.tasks.push(newTask);
   }
 }
