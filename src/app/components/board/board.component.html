@@ -10,7 +10,7 @@
         [cdkDropListAutoScrollDisabled]="true"
         (cdkDropListDropped)="drop($event)">
         @for (item of column.tasks; track item) {
-          <div class="task px-2 py-3 bg-white mb-2 border-b-[1px] border-black shadow-md" cdkDrag>{{item.heading}}</div>
+          <app-task-item [task]="item" (taskDeleted)="onDeleteTask($event)" cdkDrag></app-task-item>
         }
       </div>
 

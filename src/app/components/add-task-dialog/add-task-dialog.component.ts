@@ -4,10 +4,11 @@ import {MatButtonModule} from '@angular/material/button';
 import { MatDialogActions } from '@angular/material/dialog';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {FormsModule} from '@angular/forms';
+import {FormsModule} from '@angular/forms'; 
 import { EventEmitter } from '@angular/core';
 import { MatDatepickerModule } from "@angular/material/datepicker"
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 @Component({
   selector: 'app-add-task-dialog',
@@ -37,7 +38,8 @@ export class AddTaskDialogComponent {
   selector: 'task-dialog-data',
   templateUrl: 'add-task-dialog-body.html',
   standalone: true,
-  imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatFormFieldModule, MatInputModule, FormsModule],
+  imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatFormFieldModule, MatInputModule, FormsModule, MatCheckboxModule, MatFormFieldModule, MatDatepickerModule],
+  providers: [provideNativeDateAdapter()],
   styleUrls: ['./add-task-dialog.component.css']
 })
 export class TaskDialogData {
@@ -60,6 +62,5 @@ export class TaskDialogData {
   onAddTaskClick(): void {
     this.taskAdded.emit(this.taskFields)
     this.dialogRef.close();
-
   }
 }

@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Create your own box</h2>
+<h2 mat-dialog-title>Create your own Task</h2>
 <mat-dialog-content>
   <mat-form-field class="w-full">
     <mat-label>Heading</mat-label>
@@ -10,7 +10,10 @@
   </mat-form-field>
   <mat-form-field class="w-full">
     <mat-label>Due Date</mat-label>
-    <input matInput [(ngModel)]="taskFields.dueDate" type="date">
+    <input matInput [matDatepicker]="datepicker" [(ngModel)]="taskFields.dueDate">
+    <mat-hint>MM/DD/YYYY</mat-hint>
+    <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
+    <mat-datepicker #datepicker></mat-datepicker>
   </mat-form-field>
   <mat-checkbox [(ngModel)]="taskFields.repeat">Repeat</mat-checkbox>
 </mat-dialog-content>

@@ -11,12 +11,14 @@ import { Column } from '../../models/column.model';
 import { AddTaskDialogComponent } from '../add-task-dialog/add-task-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Task } from '../../models/task.model';
+import { TaskItemComponent } from '../task-item/task-item.component';
+
 
 
 @Component({
   selector: 'app-board',
   standalone: true,
-  imports: [DragDropModule, AddTaskDialogComponent],
+  imports: [DragDropModule, AddTaskDialogComponent, TaskItemComponent],
   templateUrl: './board.component.html',
   styleUrl: './board.component.css',
 })
@@ -46,5 +48,12 @@ export class BoardComponent {
   addTask(task: Task): void {
     const newTask = new Task(task.heading, task.description, task.dueDate, task.repeat);
     this.column.tasks.push(newTask);
+  }
+
+  onDeleteTask(task: Task): void {
+    const index = this.column.tasks.findIndex(t => t === task);
+    if (index !== -1) {
+      this.column.tasks.splice(index, 1); // Remove the task from the array
+    }
   }
 }
