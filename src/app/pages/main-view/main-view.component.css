@@ -15,11 +15,11 @@
 }
 
 
-.tasks-container.cdk-drop-list-dragging .task:not(.cdk-drag-placeholder) {
+.emample-container.cdk-drop-list-dragging .example-list:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
-.tasks-container {
+.emample-container {
   min-height: 50px;
   background: white;
   cursor: pointer;

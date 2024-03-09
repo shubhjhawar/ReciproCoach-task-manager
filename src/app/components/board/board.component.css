@@ -21,6 +21,8 @@
   
   .tasks-container {
     min-height: 50px;
+    max-height: 430px;
+    /* overflow-y: auto; */
     background: white;
     cursor: pointer;
   }

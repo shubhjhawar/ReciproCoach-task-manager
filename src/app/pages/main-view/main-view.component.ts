@@ -38,12 +38,20 @@ ideassfsdfsTasks: Task[] = [
 ];
 
 // Instantiate the Board object with the provided columns and tasks
-board: Board = new Board('Test Board', [
-  new Column('Ideas', this.ideasTasks),
-  new Column('Ideassfsdfs', this.ideassfsdfsTasks)
+board: Board = new Board('First Board', [
+  new Column('Today', this.ideasTasks),
+  new Column('Tomorrow', []),
+  new Column('Next Week', []),
+  new Column('This Month', []),
+  new Column('Next Month', []),
+  new Column('This Quarter', []),
+  new Column('Next Quarter', []),
+  new Column('This Year', []),
+  new Column('Next Year', []),
+  new Column('Wishlist', []),
 ]);
 
-  drop(event: CdkDragDrop<string[]>) {
+  drop(event: CdkDragDrop<Column[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {

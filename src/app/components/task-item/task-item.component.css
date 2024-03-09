@@ -1,5 +1,5 @@
 .tasks-container {
-    position: relative; /* Set position to relative to position the description */
+    position: relative;
     min-height: 50px;
     background: white;
     cursor: pointer;
@@ -8,7 +8,7 @@
 .description {
     display: none;
     position: absolute;
-    z-index: 10;
+    z-index: 2000;
     top: 10px;
     left: 90%;
     background-color: rgb(190, 196, 235);
