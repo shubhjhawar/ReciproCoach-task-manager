@@ -48,7 +48,7 @@ export class TaskDialogData {
   taskFields = {
     heading: '',
     description: '',
-    dueDate: '',
+    dueDate: null,
     repeat: ''
   };
 
