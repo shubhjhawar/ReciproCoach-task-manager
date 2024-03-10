@@ -1,1 +1,29 @@
-<p>main-view works!</p>
+<div class="example-container flex flex-col">
+    <!-- navbar -->
+    <div class="bg-blue-400 text-white py-4 px-2">
+        <h1>Task Manager</h1>
+    </div>
+
+    <!-- dashboard name -->
+    <div class="bg-slate-200 py-4 px-2 mb-10">
+        <h2>Your Dashboard</h2>
+    </div>
+    
+    <!-- add box dialog button -->
+    <div>
+        <app-add-box-dialog (boxAdded)="handleBoxAdded($event)"></app-add-box-dialog>
+
+    </div>
+
+    <div cdkDropList
+        [cdkDropListData]="board.columns"
+        [cdkDropListAutoScrollDisabled]="true"
+        (cdkDropListDropped)="drop($event)" 
+        class="example-list grid grid-cols-4 max-md:grid-cols-2 max-sm:grid-cols-1 gap-4 p-4 h-full" cdkDropListGroup>
+        @for (item of board.columns; track item) {
+            <app-board 
+            class="example-box"
+            [column]="item" cdkDrag></app-board>
+        }
+    </div>
+</div>
