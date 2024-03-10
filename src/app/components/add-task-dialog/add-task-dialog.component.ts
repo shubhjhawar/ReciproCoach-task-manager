@@ -61,6 +61,8 @@ export class TaskDialogData {
 
   onAddTaskClick(): void {
     this.taskAdded.emit(this.taskFields)
+    const boardFromLocalStorage = JSON.parse(localStorage.getItem("board") || "{}");
+    console.log(boardFromLocalStorage);
     this.dialogRef.close();
   }
 }

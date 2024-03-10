@@ -9,6 +9,7 @@ import {FormsModule} from '@angular/forms';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { Column } from '../../models/column.model';
 
 
 @Component({
@@ -67,18 +68,27 @@ export class EditTaskItemComponent {
   }
 
   onEditTaskClick(): void {
-    Object.assign(this.task, this.EditedTaskFields);
-    this.dialogRef.close();
+    const boardFromLocalStorage = JSON.parse(localStorage.getItem("board") || "{}");
+    for (const column of boardFromLocalStorage.columns) {
+      console.log(column)
+      const taskIndex = column.tasks.findIndex((t: Task) => t.heading === this.task.heading);
+  
+      if (taskIndex !== -1) {
+        column.tasks[taskIndex] = this.task;
+        Object.assign(this.task, this.EditedTaskFields);
+  
+        localStorage.setItem("board", JSON.stringify(boardFromLocalStorage));
+  
+        this.dialogRef.close();
+        return;
+      }
+    }
+  
   }
 
   deleteTask(): void {
-    console.log("delete")
     this.taskDeleted.emit(this.task);
     this.dialogRef.close();
-  }
-
-  check() {
-    console.log("checkefknsekjfjkdsf")
   }
 
 }

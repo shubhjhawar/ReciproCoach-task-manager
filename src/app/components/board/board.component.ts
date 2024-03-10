@@ -46,14 +46,46 @@ export class BoardComponent {
   }
 
   addTask(task: Task): void {
-    const newTask = new Task(task.heading, task.description, task.dueDate, task.repeat);
+    const newTask = new Task(task.heading, task.description, task.dueDate, task.repeat);  
+    const columnName = this.column.name;
+    
+    const boardFromLocalStorage = JSON.parse(localStorage.getItem("board") || "{}");  
+    const columnToUpdate = boardFromLocalStorage.columns.find((col: Column) => col.name === columnName);
+  
+    if (columnToUpdate) {
+      columnToUpdate.tasks.push(newTask);  
+      localStorage.setItem("board", JSON.stringify(boardFromLocalStorage));
+  
+      console.log("Updated board:", boardFromLocalStorage);
+    } else {
+      console.error("Column not found in localStorage:", columnName);
+    }
+
     this.column.tasks.push(newTask);
   }
+  
 
   onDeleteTask(task: Task): void {
     const index = this.column.tasks.findIndex(t => t === task);
+  
     if (index !== -1) {
-      this.column.tasks.splice(index, 1); // Remove the task from the array
+      this.column.tasks.splice(index, 1);
+  
+      const boardFromLocalStorage = JSON.parse(localStorage.getItem("board") || "{}");
+  
+      const columnToUpdate = boardFromLocalStorage.columns.find((col: Column) => col.name === this.column.name);
+      if (columnToUpdate) {
+        const taskIndex = columnToUpdate.tasks.findIndex((t: Task) => t.heading === task.heading);
+  
+        if (taskIndex !== -1) {
+          columnToUpdate.tasks.splice(taskIndex, 1);
+  
+          localStorage.setItem("board", JSON.stringify(boardFromLocalStorage));  
+        } else {
+          console.error("Task not found in localStorage column:", task);
+        }
+      } 
     }
   }
-}
+
+} 
