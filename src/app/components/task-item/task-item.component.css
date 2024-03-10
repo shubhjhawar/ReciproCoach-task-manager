@@ -1,0 +1,42 @@
+.tasks-container {
+    position: relative;
+    min-height: 50px;
+    background: white;
+    cursor: pointer;
+}
+
+.description {
+    display: none;
+    position: absolute;
+    z-index: 2000;
+    top: 10px;
+    left: 90%;
+    background-color: rgb(190, 196, 235);
+    color:white;
+    border: 1px solid #000000;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    width: 200px;
+}
+
+.tasks-container:hover .description {
+    display: block;
+    opacity: 1;
+}
+
+.mat-dialog-actions-centered {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+
+  .datepicker{
+    z-index: 100000 !important;
+    }
+  
