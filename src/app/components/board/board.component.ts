@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { NgIf } from '@angular/common';
 import {
   CdkDragDrop,
   moveItemInArray,
@@ -18,7 +19,7 @@ import { TaskItemComponent } from '../task-item/task-item.component';
 @Component({
   selector: 'app-board',
   standalone: true,
-  imports: [DragDropModule, AddTaskDialogComponent, TaskItemComponent],
+  imports: [DragDropModule, AddTaskDialogComponent, TaskItemComponent, NgIf],
   templateUrl: './board.component.html',
   styleUrl: './board.component.css',
 })

@@ -9,11 +9,6 @@
         <h2>Your Dashboard</h2>
     </div>
     
-    <!-- add box dialog button -->
-    <div>
-        <app-add-box-dialog (boxAdded)="handleBoxAdded($event)"></app-add-box-dialog>
-
-    </div>
 
     <div cdkDropList
         [cdkDropListData]="board.columns"
@@ -25,5 +20,8 @@
             class="example-box"
             [column]="item" cdkDrag></app-board>
         }
+        <!-- add box dialog button -->
+        <app-add-box-dialog (boxAdded)="handleBoxAdded($event)"></app-add-box-dialog>
     </div>
+
 </div>

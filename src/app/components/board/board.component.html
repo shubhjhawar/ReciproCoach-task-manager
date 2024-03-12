@@ -1,6 +1,14 @@
 <div class="bg-gray-100 h-[500px] py-2 px-4">
     <div class="w-full flex justify-between items-center mb-3">
-        <h3 class="text-lg font-semibold">{{column.name}}</h3>
+        <div class="flex items-center gap-2">
+          <h3 class="text-lg font-semibold">{{column.name}}</h3>
+          <button *ngIf="!column.inbuilt">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24">
+              <rect width="24" height="24" fill="none" />
+              <path fill="black" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83l3.75 3.75z" />
+            </svg>
+          </button>
+        </div>
         <app-add-task-dialog (taskAdded)="addTask($event)"></app-add-task-dialog>
     </div>
     <div
