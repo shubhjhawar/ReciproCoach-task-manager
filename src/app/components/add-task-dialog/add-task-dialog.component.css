@@ -1,0 +1,8 @@
+.mat-dialog-actions-centered {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  

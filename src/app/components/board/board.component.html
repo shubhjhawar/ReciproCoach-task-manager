@@ -1,0 +1,17 @@
+<div class="bg-gray-100 h-[500px] py-2 px-4">
+    <div class="w-full flex justify-between items-center mb-3">
+        <h3 class="text-lg font-semibold">{{column.name}}</h3>
+        <app-add-task-dialog (taskAdded)="addTask($event)"></app-add-task-dialog>
+    </div>
+    <div
+        cdkDropList
+        class="example-list"
+        [cdkDropListData]="column.tasks"
+        [cdkDropListAutoScrollDisabled]="true"
+        (cdkDropListDropped)="drop($event)">
+        @for (item of column.tasks; track item) {
+          <app-task-item [task]="item" class="example-box" (taskDeleted)="onDeleteTask($event)" cdkDrag></app-task-item>
+        }
+      </div>
+
+</div>
