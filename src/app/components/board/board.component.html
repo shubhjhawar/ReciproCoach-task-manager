@@ -3,12 +3,14 @@
         <h3 class="text-lg font-semibold">{{column.name}}</h3>
         <app-add-task-dialog (taskAdded)="addTask($event)"></app-add-task-dialog>
     </div>
-    <div
-    class="tasks-container"
+      <div
+        class="tasks-container"
         cdkDropList
         [cdkDropListData]="column.tasks"
         [cdkDropListAutoScrollDisabled]="true"
-        (cdkDropListDropped)="drop($event)">
+        (cdkDropListDropped)="drop($event)"
+        [attr.data-column-name]="column.name"
+        >
         @for (item of column.tasks; track item) {
           <app-task-item [task]="item" (taskDeleted)="onDeleteTask($event)" cdkDrag></app-task-item>
         }
