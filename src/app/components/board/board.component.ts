@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter} from '@angular/core';
+import { NgIf } from '@angular/common';
 import {
   CdkDragDrop,
   moveItemInArray,
@@ -12,13 +13,13 @@ import { AddTaskDialogComponent } from '../add-task-dialog/add-task-dialog.compo
 import { MatDialog } from '@angular/material/dialog';
 import { Task } from '../../models/task.model';
 import { TaskItemComponent } from '../task-item/task-item.component';
-
+import { FormsModule } from '@angular/forms';
 
 
 @Component({
   selector: 'app-board',
   standalone: true,
-  imports: [DragDropModule, AddTaskDialogComponent, TaskItemComponent],
+  imports: [DragDropModule, AddTaskDialogComponent, TaskItemComponent, NgIf, FormsModule],
   templateUrl: './board.component.html',
   styleUrl: './board.component.css',
 })
@@ -36,9 +37,14 @@ export class BoardComponent {
         event.container.data,
         event.previousIndex,
         event.currentIndex,
-      );
+        );
+      }
     }
-  }
+    
+  isEditingColumn = false;
+  editedColumnName = '';
+  @Output() ColumnDeleted: EventEmitter<Column> = new EventEmitter<Column>();
+
 
   openTaskDialog() {
     this.dialog.open(AddTaskDialogComponent);
@@ -56,4 +62,22 @@ export class BoardComponent {
       this.column.tasks.splice(index, 1); // Remove the task from the array
     }
   }
+
+  toggleEditColumn() {
+    this.isEditingColumn = !this.isEditingColumn;
+    if (this.isEditingColumn) {
+      this.editedColumnName = this.column.name;
+    }
+  }
+
+  onEditColumn() {
+    this.column.name = this.editedColumnName;
+    this.isEditingColumn = false;
+  }
+
+  onDeleteColumn(column: Column): void {
+    console.log("this working")
+    this.ColumnDeleted.emit(column)
+  }
+
 }

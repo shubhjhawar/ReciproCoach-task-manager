@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input } from '@angular/core';
 import {
   CdkDragDrop,
   moveItemInArray,
@@ -39,16 +39,16 @@ ideassfsdfsTasks: Task[] = [
 
 // Instantiate the Board object with the provided columns and tasks
 board: Board = new Board('First Board', [
-  new Column('Today', this.ideasTasks),
-  new Column('Tomorrow', []),
-  new Column('Next Week', []),
-  new Column('This Month', []),
-  new Column('Next Month', []),
-  new Column('This Quarter', []),
-  new Column('Next Quarter', []),
-  new Column('This Year', []),
-  new Column('Next Year', []),
-  new Column('Wishlist', []),
+  new Column('Today', true, this.ideasTasks),
+  new Column('Tomorrow', true, []),
+  new Column('This Week', true, []),
+  new Column('Next Week', true, []),
+  new Column('This Month', true, []),
+  new Column('Next Month', true, []),
+  new Column('This Quarter', true, []),
+  new Column('Next Quarter', true, []),
+  new Column('This Year', true, []),
+  new Column('Next Year', true, []),
 ]);
 
   drop(event: CdkDragDrop<Column[]>) {
@@ -66,13 +66,20 @@ board: Board = new Board('First Board', [
 
   handleBoxAdded(boxName: string): void {
     // Create a new column with the box name
-    const newColumn = new Column(boxName, []);
+    const newColumn = new Column(boxName, false, []);
 
     // Push the new column to the board
     this.board.columns.push(newColumn);
 
     console.log('Box added:', boxName);
     console.log('Board:', this.board);
+  }
+
+  handleBoxDeleted(column: Column) {
+    const index = this.board.columns.findIndex(c => c === column);
+    if (index !== -1) {
+      this.board.columns.splice(index, 1); // Remove the column from the array
+    }
   }
 
 }
