@@ -52,7 +52,7 @@ export class BoardComponent {
   }
 
   addTask(task: Task): void {
-    const newTask = new Task(task.heading, task.description, task.dueDate, task.repeat);
+    const newTask = new Task(task.heading, task.description, task.fixed_dueDate, task.variable_dueDate, task.repeat);
     this.column.tasks.push(newTask);
   }
 

@@ -66,7 +66,8 @@ export class EditTaskItemComponent {
   EditedTaskFields = {
     heading: this.task.heading,
     description: this.task.description,
-    dueDate: this.task.dueDate,
+    fixed_dueDate: this.task.fixed_dueDate,
+    variable_dueDate: this.task.variable_dueDate,
     repeat: this.task.repeat
   };
 

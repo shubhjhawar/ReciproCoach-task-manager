@@ -10,7 +10,7 @@
   </mat-form-field>
   <mat-form-field class="w-full">
     <mat-label>Due Date</mat-label>
-    <input matInput [matDatepicker]="datepicker" [(ngModel)]="taskFields.dueDate">
+    <input matInput [matDatepicker]="datepicker" [(ngModel)]="taskFields.fixed_dueDate">
     <mat-hint>MM/DD/YYYY</mat-hint>
     <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
     <mat-datepicker #datepicker></mat-datepicker>

@@ -23,7 +23,7 @@
             </svg>
           </button>
         </div>
-        <app-add-task-dialog (taskAdded)="addTask($event)"></app-add-task-dialog>
+        <app-add-task-dialog [columnName]="column.name" (taskAdded)="addTask($event)"></app-add-task-dialog>
     </div>
     <div
         cdkDropList

@@ -1,5 +1,5 @@
-import {Component, Output} from '@angular/core';
-import {MatDialog, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
+import {Component, Inject, Input, Output} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import { MatDialogActions } from '@angular/material/dialog';
 import {MatInputModule} from '@angular/material/input';
@@ -18,12 +18,17 @@ import { provideNativeDateAdapter } from '@angular/material/core';
   styleUrl: './add-task-dialog.component.css'
 })
 export class AddTaskDialogComponent {
+  @Input() columnName: string = ''
   constructor(public dialog: MatDialog) {}
 
   @Output() taskAdded: EventEmitter<any> = new EventEmitter<any>();
 
   openTaskDialog() {
-    const dialogRef = this.dialog.open(TaskDialogData);
+    const dialogRef = this.dialog.open(TaskDialogData, {
+      data: {
+        columnName: this.columnName // Pass the columnName to the dialog
+      }
+    });
 
     // Subscribe to the emitted event from below
     dialogRef.componentInstance.taskAdded.subscribe((boxName: string) => {
@@ -43,24 +48,102 @@ export class AddTaskDialogComponent {
   styleUrls: ['./add-task-dialog.component.css']
 })
 export class TaskDialogData {
-  constructor(public dialogRef: MatDialogRef<TaskDialogData>) {}
+  constructor(
+    public dialogRef: MatDialogRef<TaskDialogData>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
 
   taskFields = {
     heading: '',
     description: '',
-    dueDate: null,
+    fixed_dueDate: null as Date | null,
+    variable_dueDate: null as Date | null,
     repeat: ''
   };
 
   @Output() taskAdded: EventEmitter<any> = new EventEmitter<any>();
-
-
+  
   onCancelClick(): void {
+    console.log(this.data.columnName)
     this.dialogRef.close();
   }
 
   onAddTaskClick(): void {
+    this.setFixedDueDate(this.data.columnName)
     this.taskAdded.emit(this.taskFields)
     this.dialogRef.close();
   }
+
+  setFixedDueDate(columnName: string): void {
+    switch (columnName.toLowerCase()) {
+      case 'today':
+        this.taskFields.variable_dueDate = new Date();
+        break;
+      case 'tomorrow':
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        this.taskFields.variable_dueDate = tomorrow;
+        break;
+      case 'this week':
+        // Calculate the date for the next Monday
+        const today = new Date();
+        const dayOfWeek = today.getDay();
+        const diffToMonday = today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+        const nextMonday = new Date(today.setDate(diffToMonday));
+        this.taskFields.variable_dueDate = nextMonday;
+        break;
+      case 'next week':
+        // Calculate the date for the Monday after next
+        const todayForNext = new Date();
+        const dayOfWeekForNext = todayForNext.getDay();
+        const diffToNextMonday = todayForNext.getDate() - dayOfWeekForNext + (dayOfWeekForNext === 0 ? -6 : 1) + 7;
+        const nextMondayAfter = new Date(todayForNext.setDate(diffToNextMonday));
+        this.taskFields.variable_dueDate = nextMondayAfter;
+        break;
+      case 'this month':
+        // Calculate the last day of the current month
+        const todayForMonth = new Date();
+        const lastDayOfMonth = new Date(todayForMonth.getFullYear(), todayForMonth.getMonth() + 1, 0);
+        this.taskFields.variable_dueDate = lastDayOfMonth;
+        break;
+      case 'next month':
+        // Calculate the last day of the next month
+        const todayForNextMonth = new Date();
+        const nextMonth = new Date(todayForNextMonth.getFullYear(), todayForNextMonth.getMonth() + 2, 0);
+        this.taskFields.variable_dueDate = nextMonth;
+        break;
+      case 'this quarter':
+        // Calculate the last day of the current quarter
+        const todayForQuarter = new Date();
+        const currentQuarter = Math.floor((todayForQuarter.getMonth() / 3)) + 1;
+        const lastMonthOfQuarter = currentQuarter * 3;
+        const lastDayOfQuarter = new Date(todayForQuarter.getFullYear(), lastMonthOfQuarter, 0);
+        this.taskFields.variable_dueDate = lastDayOfQuarter;
+        break;
+      case 'next quarter':
+        // Calculate the last day of the next quarter
+        const todayForNextQuarter = new Date();
+        const nextQuarter = Math.floor((todayForNextQuarter.getMonth() / 3)) + 2;
+        const lastMonthOfNextQuarter = nextQuarter * 3;
+        const lastDayOfNextQuarter = new Date(todayForNextQuarter.getFullYear(), lastMonthOfNextQuarter, 0);
+        this.taskFields.variable_dueDate = lastDayOfNextQuarter;
+        break;
+      case 'this year':
+        // Calculate the last day of the current year
+        const todayForYear = new Date();
+        const lastDayOfYear = new Date(todayForYear.getFullYear(), 11, 31);
+        this.taskFields.variable_dueDate = lastDayOfYear;
+        break;
+      case 'next year':
+        // Calculate the last day of the next year
+        const todayForNextYear = new Date();
+        const lastDayOfNextYear = new Date(todayForNextYear.getFullYear() + 1, 11, 31);
+        this.taskFields.variable_dueDate = lastDayOfNextYear;
+        break;
+      default:
+        this.taskFields.variable_dueDate = null;
+        break;
+    }
+  }
+  
 }
