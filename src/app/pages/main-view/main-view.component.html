@@ -17,6 +17,7 @@
         class="example-list grid grid-cols-4 max-md:grid-cols-2 max-sm:grid-cols-1 gap-4 p-4 h-full" cdkDropListGroup>
         @for (item of board.columns; track item) {
             <app-board 
+            [board]="board"
             (ColumnDeleted)="handleBoxDeleted($event)"
             class="example-box"
             [column]="item" cdkDrag></app-board>

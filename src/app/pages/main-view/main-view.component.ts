@@ -25,17 +25,17 @@ export class MainViewComponent {
 
   // Create tasks for the 'Ideas' column
 ideasTasks: Task[] = [
-  new Task('some random idea', 'Description for some random idea', new Date(), new Date(), false),
-  new Task('This is random', 'Description for This is random', new Date(),new Date(), false),
-  new Task('build', 'Description for build', new Date(), new Date(),false)
+  new Task('some random idea', 'Description for some random idea', new Date(), new Date(), null),
+  new Task('This is random', 'Description for This is random', new Date(),new Date(), null),
+  new Task('build', 'Description for build', new Date(), new Date(), null)
 ];
 
-// Create tasks for the 'Ideassfsdfs' column
-ideassfsdfsTasks: Task[] = [
-  new Task('some random idead', 'Description for some random idead', new Date(),new Date(), false),
-  new Task('This is randomasasdasd asdsa', 'Description for This is randomasasd asdasdsa', new Date(),new Date(), false),
-  new Task('build asdsa', 'Description for build asdsa', new Date(),new Date(), false)
-];
+// // Create tasks for the 'Ideassfsdfs' column
+// ideassfsdfsTasks: Task[] = [
+//   new Task('some random idead', 'Description for some random idead', new Date(),new Date(), false),
+//   new Task('This is randomasasdasd asdsa', 'Description for This is randomasasd asdasdsa', new Date(),new Date(), false),
+//   new Task('build asdsa', 'Description for build asdsa', new Date(),new Date(), false)
+// ];
 
 // Instantiate the Board object with the provided columns and tasks
 board: Board = new Board('First Board', [

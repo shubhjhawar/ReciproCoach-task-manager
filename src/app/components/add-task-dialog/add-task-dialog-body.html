@@ -16,6 +16,22 @@
     <mat-datepicker #datepicker></mat-datepicker>
   </mat-form-field>
   <mat-checkbox [(ngModel)]="taskFields.repeat">Repeat</mat-checkbox>
+  <div class="flex my-2 gap-5" *ngIf="taskFields.repeat">
+    <mat-label>Frequency:</mat-label>
+    <mat-select [(ngModel)]="taskFields.repeatFrequency">
+      <mat-option value="daily">Daily</mat-option>
+      <mat-option value="weekly">Weekly</mat-option>
+      <mat-option value="monthly">Monthly</mat-option>
+      <mat-option value="annually">Annually</mat-option>
+    </mat-select>
+  </div>
+  <div *ngIf="taskFields.repeatFrequency === 'weekly' && taskFields.repeat">
+    <app-weekly (weeklyDataEmitter)="receiveWeeklyData($event)"></app-weekly>
+  </div>
+  <div *ngIf="taskFields.repeatFrequency === 'monthly'">
+    <!-- Show div specific to monthly repetition -->
+    <p>This is the div specific to monthly repetition.</p>
+  </div>
 </mat-dialog-content>
 <mat-dialog-actions class="mat-dialog-actions-centered">
   <button mat-button class="w-1/3 bg-red-400 hover:bg-red-500 text-white px-4 py-2 rounded-md" (click)="onCancelClick()">Cancel</button>
