@@ -12,6 +12,9 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { NgIf } from '@angular/common';
 import { WeeklyComponent } from '../weekly/weekly.component';
+import { MonthlyComponent } from '../monthly/monthly.component';
+import { generateWeeklyTasks } from '../../../utils/weekly-task-utils';
+import { generateMonthlyTasks } from '../../../utils/monthly-task-utils';
 
 @Component({
   selector: 'app-add-task-dialog',
@@ -52,7 +55,7 @@ export class AddTaskDialogComponent {
   selector: 'task-dialog-data',
   templateUrl: 'add-task-dialog-body.html',
   standalone: true,
-  imports: [NgIf, MatDialogTitle, MatDialogContent, MatDialogActions, MatFormFieldModule, MatInputModule, FormsModule, MatCheckboxModule, MatFormFieldModule, MatDatepickerModule, MatSelectModule, WeeklyComponent],
+  imports: [NgIf, MatDialogTitle, MatDialogContent, MatDialogActions, MatFormFieldModule, MatInputModule, FormsModule, MatCheckboxModule, MatFormFieldModule, MatDatepickerModule, MatSelectModule, WeeklyComponent, MonthlyComponent],
   providers: [provideNativeDateAdapter()],
   styleUrls: ['./add-task-dialog.component.css']
 })
@@ -76,19 +79,6 @@ export class TaskDialogData {
   
   onCancelClick(): void {
     console.log(this.data.columnName)
-    this.dialogRef.close();
-  }
-
-  onAddTaskClick(): void {
-    
-    if (this.taskFields.repeatFrequency === 'weekly') {
-      this.generateWeeklyTasks();
-    } else {
-      console.log("ehrerejrbjwe")
-      this.setFixedDueDate(this.data.columnName)
-      this.taskAdded.emit(this.taskFields)
-      // Add logic for other repeat frequencies (if applicable)
-    }
     this.dialogRef.close();
   }
 
@@ -164,6 +154,22 @@ export class TaskDialogData {
     }
   }
 
+  onAddTaskClick(): void {
+    if (this.taskFields.repeatFrequency === 'weekly') {
+      let generatedTasks = generateWeeklyTasks(this.selectedDays, this.frequency, this.taskFields);
+      this.repeatTaskAdded.emit(generatedTasks);
+    } else if(this.taskFields.repeatFrequency === 'monthly')
+    {
+      let generatedTasks = generateMonthlyTasks(this.monthFrequency, this.monthSelectedWeek, this.monthSelectedDay, this.taskFields);
+      this.repeatTaskAdded.emit(generatedTasks);
+    } else {
+      this.setFixedDueDate(this.data.columnName)
+      this.taskAdded.emit(this.taskFields)
+      // Add logic for other repeat frequencies (if applicable)
+    }
+    this.dialogRef.close();
+  }
+
   frequency : number = 0;
   selectedDays: string[] = [];
   receiveWeeklyData(data: any) {
@@ -171,54 +177,15 @@ export class TaskDialogData {
     this.frequency = data.frequency
     this.selectedDays = data.selectedDays
   }
-
-  daysOfWeek: string[] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   
-  generateWeeklyTasks() {
-    const currentDate = new Date();
-    const selectedDaysIndices = this.selectedDays ? this.selectedDays.map((day: any) => this.daysOfWeek.indexOf(day)) : [];
-    const frequency = this.frequency;
-    console.log(selectedDaysIndices)
-    // Check if selectedDaysIndices is empty or undefined
-    if (!selectedDaysIndices || selectedDaysIndices.length === 0) {
-      console.error('No selected days provided.');
-      return;
-    }
-  
-    // Calculate the end date for the tasks (e.g., 6 months from now)
-    const endDate = new Date();
-    endDate.setMonth(endDate.getMonth() + 6);
-  
-    const generatedTasks = [];
-  
-    // Generate tasks based on the weekly data
-    while (currentDate < endDate) {
-      const dayIndex = currentDate.getDay();
-      for (let i = 0; i < 7; i++) {
-        if (selectedDaysIndices.includes((dayIndex + i) % 7) && (i % frequency === 0)) {
-          // Create a task for this day
-          const task = {
-            heading: this.taskFields.heading,
-            description: this.taskFields.description,
-            fixed_dueDate: this.addDays(currentDate, i)
-          };
-          generatedTasks.push(task);
-        }
-      }
-      currentDate.setDate(currentDate.getDate() + 7); // Move to the next week
-    }
-  
-    // Do something with the generated tasks (e.g., save them to a database)
-    console.log('Generated tasks:', generatedTasks);
-    this.repeatTaskAdded.emit(generatedTasks);
-  }
-  
-  
-
-  addDays(date: Date, days: number) {
-    const result = new Date(date);
-    result.setDate(result.getDate() + days);
-    return result;
+  monthFrequency: number = 0;
+  monthSelectedWeek: number = 0;
+  monthSelectedDay: string = '';
+  receiveMonthlyData(data: any) {
+    console.log('Received monthly data in parent:', data);
+    this.monthFrequency = data.frequency
+    this.monthSelectedWeek = data.selectedWeek
+    this.monthSelectedDay = data.selectedDay
   }
   
 }

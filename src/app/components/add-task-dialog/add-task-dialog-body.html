@@ -28,9 +28,8 @@
   <div *ngIf="taskFields.repeatFrequency === 'weekly' && taskFields.repeat">
     <app-weekly (weeklyDataEmitter)="receiveWeeklyData($event)"></app-weekly>
   </div>
-  <div *ngIf="taskFields.repeatFrequency === 'monthly'">
-    <!-- Show div specific to monthly repetition -->
-    <p>This is the div specific to monthly repetition.</p>
+  <div *ngIf="taskFields.repeatFrequency === 'monthly'">    
+    <app-monthly (monthlyDataEmitter)="receiveMonthlyData($event)"></app-monthly>
   </div>
 </mat-dialog-content>
 <mat-dialog-actions class="mat-dialog-actions-centered">
