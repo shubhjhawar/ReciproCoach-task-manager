@@ -8,12 +8,28 @@ const daysOfWeek: any = {
     'Saturday': 6
 };
 
-function generateDatesForMonthlyRepeatTasks(weekNumber: any, dayOfWeek: string, monthFrequency: number) {
+const monthsOfYear: any = {
+    'January': 0,
+    'February': 1,
+    'March': 2,
+    'April': 3,
+    'May': 4,
+    'June': 5,
+    'July': 6,
+    'August': 7,
+    'September': 8,
+    'October': 9,
+    'November': 10,
+    'December': 11
+};
+
+function generateDatesForYearlyRepeatTasks(yearFrequency:number, month: string, weekNumber: any, dayOfWeek: string) {
     const currentDate = new Date();
     const endDate = new Date(currentDate);
-    endDate.setMonth(currentDate.getMonth() + 12);
-
-
+    endDate.setFullYear(currentDate.getFullYear() + 5);
+    
+    currentDate.setMonth(monthsOfYear[month])
+    
     const dates : any = [];
 
     while (currentDate < endDate) {
@@ -80,9 +96,9 @@ function generateDatesForMonthlyRepeatTasks(weekNumber: any, dayOfWeek: string, 
                     count++;
                     if(count == weekNumber)
                     {
-                        
                         dates.push(targetDate)
                         count = 0;
+                        break
                     }
                 }
             }
@@ -90,15 +106,14 @@ function generateDatesForMonthlyRepeatTasks(weekNumber: any, dayOfWeek: string, 
         }
 
         // Move to the next month based on the specified frequency
-        currentDate.setMonth(currentDate.getMonth() + monthFrequency);
+        currentDate.setFullYear(currentDate.getFullYear() + yearFrequency);
     }
 
     return dates;
 }
 
-
-export function generateMonthlyTasks(monthFrequency: number, monthSelectedWeek: number, monthSelectedDay: string, taskFields: any) {
-    const dates = generateDatesForMonthlyRepeatTasks(monthSelectedWeek, monthSelectedDay, monthFrequency);
+export function generateYearlyTasks(yearFrequency: number, yearSelectedMonth: any, yearSelectedWeek: string, yearSelectedDay:any, taskFields: any) {
+    const dates = generateDatesForYearlyRepeatTasks(yearFrequency, yearSelectedMonth, yearSelectedWeek, yearSelectedDay);
     const generatedTasks: any = [];
 
     dates.forEach((date: Date) => {

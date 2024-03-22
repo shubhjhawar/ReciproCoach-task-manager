@@ -6,7 +6,7 @@
     </div>
 
     <p>On The</p>
-    <mat-button-toggle-group [(ngModel)]="monthlyFormData.selectedWeek" class="flex w-fit" name="selectedWeek" (change)="onWeekChange($event)">
+    <mat-button-toggle-group [(ngModel)]="monthlyFormData.selectedWeek" class="flex flex-wrap w-fit" name="selectedWeek" (change)="onWeekChange($event)">
         <mat-button-toggle value="1">First</mat-button-toggle>
         <mat-button-toggle value="2">Second</mat-button-toggle>
         <mat-button-toggle value="3">Third</mat-button-toggle>

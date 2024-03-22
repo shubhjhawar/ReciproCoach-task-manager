@@ -28,8 +28,11 @@
   <div *ngIf="taskFields.repeatFrequency === 'weekly' && taskFields.repeat">
     <app-weekly (weeklyDataEmitter)="receiveWeeklyData($event)"></app-weekly>
   </div>
-  <div *ngIf="taskFields.repeatFrequency === 'monthly'">    
+  <div *ngIf="taskFields.repeatFrequency === 'monthly' && taskFields.repeat">    
     <app-monthly (monthlyDataEmitter)="receiveMonthlyData($event)"></app-monthly>
+  </div>
+  <div *ngIf="taskFields.repeatFrequency === 'annually' && taskFields.repeat">    
+    <app-yearly (monthlyDataEmitter)="receiveYearlyData($event)"></app-yearly>
   </div>
 </mat-dialog-content>
 <mat-dialog-actions class="mat-dialog-actions-centered">

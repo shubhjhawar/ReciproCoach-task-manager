@@ -13,8 +13,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { NgIf } from '@angular/common';
 import { WeeklyComponent } from '../weekly/weekly.component';
 import { MonthlyComponent } from '../monthly/monthly.component';
+import { YearlyComponent } from '../yearly/yearly.component';
 import { generateWeeklyTasks } from '../../../utils/weekly-task-utils';
 import { generateMonthlyTasks } from '../../../utils/monthly-task-utils';
+import { generateYearlyTasks } from '../../../utils/yearly-task-utils';
 
 @Component({
   selector: 'app-add-task-dialog',
@@ -55,7 +57,7 @@ export class AddTaskDialogComponent {
   selector: 'task-dialog-data',
   templateUrl: 'add-task-dialog-body.html',
   standalone: true,
-  imports: [NgIf, MatDialogTitle, MatDialogContent, MatDialogActions, MatFormFieldModule, MatInputModule, FormsModule, MatCheckboxModule, MatFormFieldModule, MatDatepickerModule, MatSelectModule, WeeklyComponent, MonthlyComponent],
+  imports: [NgIf, MatDialogTitle, MatDialogContent, MatDialogActions, MatFormFieldModule, MatInputModule, FormsModule, MatCheckboxModule, MatFormFieldModule, MatDatepickerModule, MatSelectModule, WeeklyComponent, MonthlyComponent, YearlyComponent],
   providers: [provideNativeDateAdapter()],
   styleUrls: ['./add-task-dialog.component.css']
 })
@@ -162,6 +164,10 @@ export class TaskDialogData {
     {
       let generatedTasks = generateMonthlyTasks(this.monthFrequency, this.monthSelectedWeek, this.monthSelectedDay, this.taskFields);
       this.repeatTaskAdded.emit(generatedTasks);
+    } else if(this.taskFields.repeatFrequency === 'annually')
+    {
+      let generatedTasks = generateYearlyTasks(this.yearFrequency, this.yearSelectedMonth, this.yearSelectedWeek, this.yearSelectedDay, this.taskFields);
+      this.repeatTaskAdded.emit(generatedTasks);
     } else {
       this.setFixedDueDate(this.data.columnName)
       this.taskAdded.emit(this.taskFields)
@@ -186,6 +192,18 @@ export class TaskDialogData {
     this.monthFrequency = data.frequency
     this.monthSelectedWeek = data.selectedWeek
     this.monthSelectedDay = data.selectedDay
+  }
+
+  yearFrequency: number = 0;
+  yearSelectedMonth: string = '';
+  yearSelectedWeek: any = 0;
+  yearSelectedDay: string = '';
+  receiveYearlyData(data: any) {
+    console.log('Received monthly data in parent:', data);
+    this.yearFrequency = data.frequency
+    this.yearSelectedMonth=data.selectedMonth
+    this.yearSelectedWeek = data.selectedWeek
+    this.yearSelectedDay = data.selectedDay
   }
   
 }
