@@ -23,35 +23,45 @@ import { Task } from '../../models/task.model';
   styleUrl: './main-view.component.css'
 })
 export class MainViewComponent {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+  board: Board = new Board('First Board', []);  
 
-    // Create tasks for the 'Ideas' column
-ideasTasks: Task[] = [
-  new Task('some random idea', 'Description for some random idea', new Date(), new Date(), null, false),
-  new Task('This is random', 'Description for This is random', new Date(),new Date(), null, false),
-  new Task('build', 'Description for build', new Date(), new Date(), null, false)
-];
+  ngOnInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      const storedBoard = localStorage.getItem('board');
+  
+      if (storedBoard) {
+        this.board = JSON.parse(storedBoard);
+      } else {
+        this.initializeBoard();
+      }
+    }
+  }
 
-// // Create tasks for the 'Ideassfsdfs' column
-// ideassfsdfsTasks: Task[] = [
-//   new Task('some random idead', 'Description for some random idead', new Date(),new Date(), false),
-//   new Task('This is randomasasdasd asdsa', 'Description for This is randomasasd asdasdsa', new Date(),new Date(), false),
-//   new Task('build asdsa', 'Description for build asdsa', new Date(),new Date(), false)
-// ];
-
-// Instantiate the Board object with the provided columns and tasks
-
-  this.board = new Board('First Board', [
-    new Column('Today', ideasTasks),
-    new Column('Tomorrow', []),
-    new Column('Next Week', []),
-    new Column('This Month', []),
-    new Column('Next Month', []),
-    new Column('This Quarter', []),
-    new Column('Next Quarter', []),
-    new Column('This Year', []),
-    new Column('Next Year', []),
-    new Column('Wishlist', []),
-  ]);
+  initializeBoard(): void {
+    const ideasTasks: Task[] = [
+      new Task('some random idea', 'Description for some random idea', new Date(), new Date(), null, false),
+      new Task('This is random', 'Description for This is random', new Date(), new Date(), null, false),
+      new Task('build', 'Description for build', new Date(), new Date(), null, false)
+    ];
+  
+    this.board = new Board('First Board', [
+      new Column('Today', true, ideasTasks),
+      new Column('Tomorrow', true, []),
+      new Column('This Week', true, []),
+      new Column('Next Week', true, []),
+      new Column('This Month', true, []),
+      new Column('Next Month', true, []),
+      new Column('This Quarter', true, []),
+      new Column('Next Quarter', true, []),
+      new Column('This Year', true, []),
+      new Column('Next Year', true, []),
+    ]);
+  
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('board', JSON.stringify(this.board));
+    }
+  
 
   if (isPlatformBrowser(this.platformId)) {
     localStorage.setItem('board', JSON.stringify(this.board));
