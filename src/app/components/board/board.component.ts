@@ -65,8 +65,9 @@ export class BoardComponent {
   }
 
   addTask(task: Task): void {
-    const newTask = new Task(task.heading, task.description, task.fixed_dueDate, task.variable_dueDate, null);
+    const newTask = new Task(task.heading, task.description, task.fixed_dueDate, task.variable_dueDate, null, false);
     this.column.tasks.push(newTask);
+    console.log("hehe")
   }
 
   onDeleteTask(task: Task): void {

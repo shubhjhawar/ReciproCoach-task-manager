@@ -25,6 +25,9 @@
       <mat-option value="annually">Annually</mat-option>
     </mat-select>
   </div>
+  <div *ngIf="taskFields.repeatFrequency === 'daily' && taskFields.repeat">
+    <app-daily (dailyDataEmitter)="receiveDailyData($event)"></app-daily>
+  </div>
   <div *ngIf="taskFields.repeatFrequency === 'weekly' && taskFields.repeat">
     <app-weekly (weeklyDataEmitter)="receiveWeeklyData($event)"></app-weekly>
   </div>
@@ -32,7 +35,7 @@
     <app-monthly (monthlyDataEmitter)="receiveMonthlyData($event)"></app-monthly>
   </div>
   <div *ngIf="taskFields.repeatFrequency === 'annually' && taskFields.repeat">    
-    <app-yearly (monthlyDataEmitter)="receiveYearlyData($event)"></app-yearly>
+    <app-yearly (yearlyDataEmitter)="receiveYearlyData($event)"></app-yearly>
   </div>
 </mat-dialog-content>
 <mat-dialog-actions class="mat-dialog-actions-centered">

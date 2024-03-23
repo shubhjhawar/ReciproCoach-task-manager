@@ -34,12 +34,11 @@ export class YearlyComponent {
 
   daysInWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Day', 'Weekday', 'Weekend day'];
 
-  @Output() monthlyDataEmitter: EventEmitter<any> = new EventEmitter<any>();
+  @Output() yearlyDataEmitter: EventEmitter<any> = new EventEmitter<any>();
 
   submitForm() {
-    // Implement form submission logic here
     console.log(this.yearlyFormData)
-    this.monthlyDataEmitter.emit(this.yearlyFormData);
+    this.yearlyDataEmitter.emit(this.yearlyFormData);
   }
 
   onFrequencyChange(event: any) {

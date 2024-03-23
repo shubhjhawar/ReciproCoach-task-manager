@@ -11,9 +11,11 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { NgIf } from '@angular/common';
+import { DailyComponent } from '../daily/daily.component';
 import { WeeklyComponent } from '../weekly/weekly.component';
 import { MonthlyComponent } from '../monthly/monthly.component';
 import { YearlyComponent } from '../yearly/yearly.component';
+import { generateDailyTasks } from '../../../utils/daily-utils';
 import { generateWeeklyTasks } from '../../../utils/weekly-task-utils';
 import { generateMonthlyTasks } from '../../../utils/monthly-task-utils';
 import { generateYearlyTasks } from '../../../utils/yearly-task-utils';
@@ -57,7 +59,7 @@ export class AddTaskDialogComponent {
   selector: 'task-dialog-data',
   templateUrl: 'add-task-dialog-body.html',
   standalone: true,
-  imports: [NgIf, MatDialogTitle, MatDialogContent, MatDialogActions, MatFormFieldModule, MatInputModule, FormsModule, MatCheckboxModule, MatFormFieldModule, MatDatepickerModule, MatSelectModule, WeeklyComponent, MonthlyComponent, YearlyComponent],
+  imports: [NgIf, MatDialogTitle, MatDialogContent, MatDialogActions, MatFormFieldModule, MatInputModule, FormsModule, MatCheckboxModule, MatFormFieldModule, MatDatepickerModule, MatSelectModule, DailyComponent, WeeklyComponent, MonthlyComponent, YearlyComponent],
   providers: [provideNativeDateAdapter()],
   styleUrls: ['./add-task-dialog.component.css']
 })
@@ -157,7 +159,11 @@ export class TaskDialogData {
   }
 
   onAddTaskClick(): void {
-    if (this.taskFields.repeatFrequency === 'weekly') {
+    if (this.taskFields.repeatFrequency === 'daily') {
+      console.log("check here",this.dailyFrequency)
+      let generatedTasks = generateDailyTasks(this.dailyFrequency, this.taskFields);
+      this.repeatTaskAdded.emit(generatedTasks);
+    } else if (this.taskFields.repeatFrequency === 'weekly') {
       let generatedTasks = generateWeeklyTasks(this.selectedDays, this.frequency, this.taskFields);
       this.repeatTaskAdded.emit(generatedTasks);
     } else if(this.taskFields.repeatFrequency === 'monthly')
@@ -174,6 +180,12 @@ export class TaskDialogData {
       // Add logic for other repeat frequencies (if applicable)
     }
     this.dialogRef.close();
+  }
+  
+  dailyFrequency : number = 0;
+  receiveDailyData(data: any) {
+    console.log('Received daily data in parent:', data.frequency);
+    this.dailyFrequency = data.frequency
   }
 
   frequency : number = 0;
@@ -199,7 +211,7 @@ export class TaskDialogData {
   yearSelectedWeek: any = 0;
   yearSelectedDay: string = '';
   receiveYearlyData(data: any) {
-    console.log('Received monthly data in parent:', data);
+    console.log('Received yearly data in parent:', data);
     this.yearFrequency = data.frequency
     this.yearSelectedMonth=data.selectedMonth
     this.yearSelectedWeek = data.selectedWeek

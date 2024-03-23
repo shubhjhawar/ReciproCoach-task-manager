@@ -24,6 +24,7 @@ const monthsOfYear: any = {
 };
 
 function generateDatesForYearlyRepeatTasks(yearFrequency:number, month: string, weekNumber: any, dayOfWeek: string) {
+    console.log(yearFrequency, month, weekNumber, dayOfWeek)
     const currentDate = new Date();
     const endDate = new Date(currentDate);
     endDate.setFullYear(currentDate.getFullYear() + 5);
@@ -47,7 +48,7 @@ function generateDatesForYearlyRepeatTasks(yearFrequency:number, month: string, 
                 if(dayOfWeek=='Day'){
                     dates.push(targetDate)
                     break
-                } else if(dayOfWeek=='weekday' || dayOfWeek=='weekend day') {
+                } else if(dayOfWeek=='Weekday' || dayOfWeek=='Weekend day') {
                     if(targetDate.getDay() === 0 || targetDate.getDay() === 6) {
                         dates.push(targetDate)
                         weekendCount=0  
@@ -108,6 +109,7 @@ function generateDatesForYearlyRepeatTasks(yearFrequency:number, month: string, 
         // Move to the next month based on the specified frequency
         currentDate.setFullYear(currentDate.getFullYear() + yearFrequency);
     }
+    console.log(dates)
 
     return dates;
 }
@@ -124,7 +126,7 @@ export function generateYearlyTasks(yearFrequency: number, yearSelectedMonth: an
         };
         generatedTasks.push(task);
     });
-  
+    console.log(generatedTasks)
     return generatedTasks;
 }
 

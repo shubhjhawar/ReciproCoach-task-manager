@@ -6,6 +6,7 @@ import {
   CdkDrag,
   CdkDropList,
 } from '@angular/cdk/drag-drop';
+import { RouterModule } from '@angular/router';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { Board } from '../../models/board.model';
 import { Column } from '../../models/column.model';
@@ -17,7 +18,7 @@ import { Task } from '../../models/task.model';
 @Component({
   selector: 'app-main-view',
   standalone: true,
-  imports: [DragDropModule, CommonModule, AddBoxDialogComponent, BoardComponent],
+  imports: [DragDropModule, CommonModule, AddBoxDialogComponent, BoardComponent, RouterModule],
   templateUrl: './main-view.component.html',
   styleUrl: './main-view.component.css'
 })
@@ -25,9 +26,9 @@ export class MainViewComponent {
 
   // Create tasks for the 'Ideas' column
 ideasTasks: Task[] = [
-  new Task('some random idea', 'Description for some random idea', new Date(), new Date(), null),
-  new Task('This is random', 'Description for This is random', new Date(),new Date(), null),
-  new Task('build', 'Description for build', new Date(), new Date(), null)
+  new Task('some random idea', 'Description for some random idea', new Date(), new Date(), null, false),
+  new Task('This is random', 'Description for This is random', new Date(),new Date(), null, false),
+  new Task('build', 'Description for build', new Date(), new Date(), null, false)
 ];
 
 // // Create tasks for the 'Ideassfsdfs' column

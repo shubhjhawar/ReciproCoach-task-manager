@@ -1,5 +1,8 @@
 <div class="tasks-container cdk-drag-animating w-full px-2 py-3 bg-white border-b-[1px] border-black shadow-md" (dblclick)="onDoubleClick()">
-    <p class="">{{task.heading}}</p>
+    <div class="flex w-full justify-between">
+        <p class="">{{task.heading}}</p>
+        <input type="checkbox" (change)="completeTask(task)" [checked]="task.complete" class="mr-2">
+    </div>
     <div class="description">
         <p>{{task.description}}</p>
         <p *ngIf="task.fixed_dueDate" class="text-red-500">{{formatDate(task.fixed_dueDate)}}</p>

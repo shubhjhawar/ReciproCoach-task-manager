@@ -9,18 +9,29 @@ import {FormsModule} from '@angular/forms';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import {
+  MatBottomSheet,
+  MatBottomSheetModule,
+  MatBottomSheetRef,
+} from '@angular/material/bottom-sheet';
+import {MatListModule} from '@angular/material/list';
+import {MatButtonModule} from '@angular/material/button';
+import { CompletedTask } from '../../models/completed-tasks.model';
 
 
 @Component({
   selector: 'app-task-item',
   standalone: true,
-  imports: [NgIf],
+  imports: [NgIf, MatButtonModule, MatBottomSheetModule],
   templateUrl: './task-item.component.html',
   styleUrl: './task-item.component.css' 
 })
 export class TaskItemComponent {
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, private _bottomSheet: MatBottomSheet) {}
 
+  openBottomSheet(): void {
+    this._bottomSheet.open(BottomSuccessSheet);
+  }
 
   @Input() task!: Task;
   @Output() taskDeleted: EventEmitter<Task> = new EventEmitter<Task>();
@@ -43,7 +54,17 @@ export class TaskItemComponent {
     const year = date.getFullYear();
 
     return `${day}-${month}-${year}`;
-}
+  }
+
+  completeTask(task: Task): void {
+    task.complete = !task.complete;
+    if (task.complete) {
+       console.log(task)
+       CompletedTask.tasks.push(task);
+       this.taskDeleted.emit(this.task);
+       this.openBottomSheet();
+    }
+  }
 
 }
 
@@ -86,9 +107,20 @@ export class EditTaskItemComponent {
     this.dialogRef.close();
   }
 
-  check() {
-    console.log("checkefknsekjfjkdsf")
-  }
-
 }
 
+
+@Component({
+  selector: 'bottom-success-sheet',
+  templateUrl: './bottom-success-sheet.html',
+  standalone: true,
+  imports: [MatListModule],
+})
+export class BottomSuccessSheet {
+  constructor(private _bottomSheetRef: MatBottomSheetRef<BottomSuccessSheet>) {}
+
+  openLink(event: MouseEvent): void {
+    this._bottomSheetRef.dismiss();
+    event.preventDefault();
+  }
+}
