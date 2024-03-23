@@ -34,7 +34,7 @@
         (cdkDropListDropped)="drop($event)"
         [attr.data-column-name]="column.name"
         >
-        @for (item of column.tasks; track item) {
+        @for (item of filterTasks(column.tasks); track item) {
           <app-task-item [task]="item" (taskDeleted)="onDeleteTask($event)" cdkDrag></app-task-item>
         }
       </div>

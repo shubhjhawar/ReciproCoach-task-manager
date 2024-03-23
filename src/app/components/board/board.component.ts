@@ -130,12 +130,31 @@ export class BoardComponent {
   
 
   onDeleteTask(task: Task): void {
-    const index = this.column.tasks.findIndex(t => t === task);
-  
+    const index = this.column.tasks.findIndex((t: Task) => t === task);
+
     if (index !== -1) {
-      this.column.tasks.splice(index, 1); // Remove the task from the array
+      this.column.tasks.splice(index, 1);
+
+      const columnName = this.column.name;
+      const boardFromLocalStorage = JSON.parse(localStorage.getItem("board") || "{}");
+      const columnToUpdate = boardFromLocalStorage.columns.find((col: Column) => col.name === columnName);
+
+      if (columnToUpdate) {
+          const taskIndexToDelete = columnToUpdate.tasks.findIndex((t: Task) => t.heading === task.heading);
+
+          if (taskIndexToDelete !== -1) {
+              columnToUpdate.tasks.splice(taskIndexToDelete, 1);
+              localStorage.setItem("board", JSON.stringify(boardFromLocalStorage));
+          } else {
+              console.error("Task not found in columnToUpdate tasks:", task);
+          }
+      } else {
+          console.error("Column not found in localStorage:", columnName);
+      }
     }
   }
+
+  
 
   toggleEditColumn() {
     this.isEditingColumn = !this.isEditingColumn;
@@ -162,8 +181,9 @@ export class BoardComponent {
     tasks.forEach(task => {
         // Check if the task is a repeat task
         if (task.repeat) {
+            const timeInQuestion = new Date(task.fixed_dueDate)
             // If there is no closest repeat task yet or if the current task is closer to the current date
-            if (!closestRepeatTask || Math.abs(task.fixed_dueDate.getTime() - currentDate.getTime()) < Math.abs(closestRepeatTask.fixed_dueDate.getTime() - currentDate.getTime())) {
+            if (!closestRepeatTask || Math.abs(timeInQuestion.getTime() - currentDate.getTime()) < Math.abs(new Date(closestRepeatTask.fixed_dueDate).getTime() - currentDate.getTime())) {
                 closestRepeatTask = task;
             }
             // Add the closest repeat task (if any) to the unique tasks map
@@ -188,11 +208,23 @@ export class BoardComponent {
       for (const column of this.board.columns) {
         if (this.isTaskInColumnTimeFrame(task, column)) {
           column.tasks.push(task);
+  
+          // Store the updated board in local storage
+          const boardFromLocalStorage = JSON.parse(localStorage.getItem("board") || "{}");  
+          const columnToUpdate = boardFromLocalStorage.columns.find((col: Column) => col.name === column.name);
+          if (columnToUpdate) {
+            columnToUpdate.tasks.push(task);  
+            localStorage.setItem("board", JSON.stringify(boardFromLocalStorage));
+          } else {
+            console.error("Column not found in localStorage:", column.name);
+          }
+  
           break;
         }
       }
     });
   }
+  
 
   isTaskInColumnTimeFrame(task: Task, column: Column): boolean {
     const dueDate = new Date(task.fixed_dueDate);
