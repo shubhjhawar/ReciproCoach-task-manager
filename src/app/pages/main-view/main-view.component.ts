@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input } from '@angular/core';
+import { Component, Inject, PLATFORM_ID, EventEmitter, Input } from '@angular/core';
 import {
   CdkDragDrop,
   moveItemInArray,
@@ -10,7 +10,7 @@ import { RouterModule } from '@angular/router';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { Board } from '../../models/board.model';
 import { Column } from '../../models/column.model';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { AddBoxDialogComponent } from '../../components/add-box-dialog/add-box-dialog.component';
 import { BoardComponent } from '../../components/board/board.component';
 import { Task } from '../../models/task.model';
@@ -24,7 +24,7 @@ import { Task } from '../../models/task.model';
 })
 export class MainViewComponent {
 
-  // Create tasks for the 'Ideas' column
+    // Create tasks for the 'Ideas' column
 ideasTasks: Task[] = [
   new Task('some random idea', 'Description for some random idea', new Date(), new Date(), null, false),
   new Task('This is random', 'Description for This is random', new Date(),new Date(), null, false),
@@ -39,18 +39,24 @@ ideasTasks: Task[] = [
 // ];
 
 // Instantiate the Board object with the provided columns and tasks
-board: Board = new Board('First Board', [
-  new Column('Today', true, this.ideasTasks),
-  new Column('Tomorrow', true, []),
-  new Column('This Week', true, []),
-  new Column('Next Week', true, []),
-  new Column('This Month', true, []),
-  new Column('Next Month', true, []),
-  new Column('This Quarter', true, []),
-  new Column('Next Quarter', true, []),
-  new Column('This Year', true, []),
-  new Column('Next Year', true, []),
-]);
+
+  this.board = new Board('First Board', [
+    new Column('Today', ideasTasks),
+    new Column('Tomorrow', []),
+    new Column('Next Week', []),
+    new Column('This Month', []),
+    new Column('Next Month', []),
+    new Column('This Quarter', []),
+    new Column('Next Quarter', []),
+    new Column('This Year', []),
+    new Column('Next Year', []),
+    new Column('Wishlist', []),
+  ]);
+
+  if (isPlatformBrowser(this.platformId)) {
+    localStorage.setItem('board', JSON.stringify(this.board));
+  }
+}
 
   drop(event: CdkDragDrop<Column[]>) {
     if (event.previousContainer === event.container) {
@@ -74,6 +80,7 @@ board: Board = new Board('First Board', [
 
     console.log('Box added:', boxName);
     console.log('Board:', this.board);
+    localStorage.setItem("board", JSON.stringify(this.board));
   }
 
   handleBoxDeleted(column: Column) {

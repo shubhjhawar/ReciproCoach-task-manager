@@ -43,21 +43,61 @@ export class BoardComponent {
 
   drop(event: CdkDragDrop<Task[]>) {
     if (event.previousContainer === event.container) {
+      // drag drop in same column
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      // Update localStorage for same column
+
+      // getting localstorage and columnName
+      const boardFromLocalStorage = JSON.parse(localStorage.getItem("board") || "{}");
+      const columnName = event.container.element.nativeElement.getAttribute('data-column-name');
+      
+      if (columnName) {
+        // finding the column to update
+        const columnToUpdate = boardFromLocalStorage.columns.find((col: Column) => col.name === columnName);
+        if (columnToUpdate) {
+          // Update tasks array in localStorage with the new order
+          columnToUpdate.tasks = event.container.data; 
+        } else {
+          console.error("Column not found in localStorage:", columnName);
+        }
+      } else {
+        console.error("Column name not found in data attribute.");
+      }
     } else {
+      // Transfer task from previous column to current column
+      const previousColumnName = event.previousContainer.element.nativeElement.getAttribute('data-column-name');
+
+      // drag drop in different column
+      const taskToMove = event.previousContainer.data[event.previousIndex];
       transferArrayItem(
         event.previousContainer.data,
-        event.container.data,
+        event.container.data, 
         event.previousIndex,
-        event.currentIndex,
-        );
-      }
-    }
-    
-  isEditingColumn = false;
-  editedColumnName = '';
-  @Output() ColumnDeleted: EventEmitter<Column> = new EventEmitter<Column>();
+        event.currentIndex
+      );
+  
+      // getting localstorage and columnName
+      const boardFromLocalStorage = JSON.parse(localStorage.getItem("board") || "{}");
+      const columnName = event.container.element.nativeElement.getAttribute('data-column-name');
 
+      if (previousColumnName && columnName) {
+        // finding the two columns
+        const prevColToUpdate = boardFromLocalStorage.columns.find((col: Column) => col.name === previousColumnName);
+        const columnToUpdate = boardFromLocalStorage.columns.find((col: Column) => col.name === columnName);
+        if (prevColToUpdate && columnToUpdate) {
+          // updating the two columns
+          prevColToUpdate.tasks = event.previousContainer.data
+          columnToUpdate.tasks = event.container.data;
+          localStorage.setItem("board", JSON.stringify(boardFromLocalStorage));
+        } else {
+          console.error("Column not found in localStorage:", columnName);
+        }
+      } else {
+        console.error("Column name not found in data attribute.");
+      }
+
+    }
+  }
 
   openTaskDialog() {
     this.dialog.open(AddTaskDialogComponent);
@@ -65,106 +105,31 @@ export class BoardComponent {
   }
 
   addTask(task: Task): void {
-    const newTask = new Task(task.heading, task.description, task.fixed_dueDate, task.variable_dueDate, null, false);
+    const newTask = new Task(task.heading, task.description, task.fixed_dueDate, task.variable_dueDate, null, false);  
+    const columnName = this.column.name;
+    
+    const boardFromLocalStorage = JSON.parse(localStorage.getItem("board") || "{}");  
+    const columnToUpdate = boardFromLocalStorage.columns.find((col: Column) => col.name === columnName);
+  
+    if (columnToUpdate) {
+      columnToUpdate.tasks.push(newTask);  
+      localStorage.setItem("board", JSON.stringify(boardFromLocalStorage));
+  
+      console.log("Updated board:", boardFromLocalStorage);
+    } else {
+      console.error("Column not found in localStorage:", columnName);
+    }
+
     this.column.tasks.push(newTask);
     console.log("hehe")
   }
+  
 
   onDeleteTask(task: Task): void {
     const index = this.column.tasks.findIndex(t => t === task);
+  
     if (index !== -1) {
       this.column.tasks.splice(index, 1); // Remove the task from the array
     }
   }
-
-  toggleEditColumn() {
-    this.isEditingColumn = !this.isEditingColumn;
-    if (this.isEditingColumn) {
-      this.editedColumnName = this.column.name;
-    }
-  }
-
-  onEditColumn() {
-    this.column.name = this.editedColumnName;
-    this.isEditingColumn = false;
-  }
-
-  onDeleteColumn(column: Column): void {
-    console.log("this working")
-    this.ColumnDeleted.emit(column)
-  }
-
-  filterTasks(tasks: Task[]): Task[] {
-    const currentDate = new Date();
-    let uniqueTasks: Map<string, Task> = new Map(); // Map to store unique tasks by their unique identifier
-    let closestRepeatTask: Task | null = null;
-
-    tasks.forEach(task => {
-        // Check if the task is a repeat task
-        if (task.repeat) {
-            // If there is no closest repeat task yet or if the current task is closer to the current date
-            if (!closestRepeatTask || Math.abs(task.fixed_dueDate.getTime() - currentDate.getTime()) < Math.abs(closestRepeatTask.fixed_dueDate.getTime() - currentDate.getTime())) {
-                closestRepeatTask = task;
-            }
-            // Add the closest repeat task (if any) to the unique tasks map
-            if (closestRepeatTask) {
-                uniqueTasks.set(closestRepeatTask.heading, closestRepeatTask);
-            }
-        } else {
-            // For non-repeat tasks, add them directly to the unique tasks map
-            uniqueTasks.set(task.heading, task);
-        }
-    });
-
-    // Convert the map values (unique tasks) back to an array and return it
-    return Array.from(uniqueTasks.values());
 }
-
-
-  
-
-  addRepeatTasks(repeatedTasks: Task[]): void {
-    repeatedTasks.forEach(task => {
-      const dueDate = task.fixed_dueDate;
-      task.repeat = true;
-      if (!dueDate) return; // Skip tasks with no due date
-      for (const column of this.board.columns) {
-        if (this.isTaskInColumnTimeFrame(task, column)) {
-          column.tasks.push(task);
-          break;
-        }
-      }
-    });
-  }
-
-  isTaskInColumnTimeFrame(task: Task, column: Column): boolean {
-    const dueDate = new Date(task.fixed_dueDate);
-    switch (column.name) {
-      case 'Today':
-        return isToday(dueDate);
-      case 'Tomorrow':
-        return isTomorrow(dueDate);
-      case 'This Week':
-        return isThisWeek(dueDate);
-      case 'Next Week':
-        return isNextWeek(dueDate);
-      case 'This Month':
-        return isThisMonth(dueDate);
-      case 'Next Month':
-        return isNextMonth(dueDate);
-      case 'This Quarter':
-        return isThisQuarter(dueDate);
-      case 'Next Quarter':
-        return isNextQuarter(dueDate);
-      case 'This Year':
-        return isThisYear(dueDate);
-      case 'Next Year':
-        return isNextYear(dueDate);
-      default:
-        return false;
-    }
-  }
-
-
-}
-

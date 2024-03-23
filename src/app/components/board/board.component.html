@@ -25,14 +25,17 @@
         </div>
         <app-add-task-dialog [columnName]="column.name" (taskAdded)="addTask($event)" (repeatTaskAdded)="addRepeatTasks($event)"></app-add-task-dialog>
     </div>
-    <div
+      <div
+        class="tasks-container"
         cdkDropList
         class="example-list"
         [cdkDropListData]="column.tasks"
         [cdkDropListAutoScrollDisabled]="true"
-        (cdkDropListDropped)="drop($event)">
-        @for (item of filterTasks(column.tasks); track item) {
-          <app-task-item [task]="item" class="example-box" (taskDeleted)="onDeleteTask($event)" cdkDrag></app-task-item>
+        (cdkDropListDropped)="drop($event)"
+        [attr.data-column-name]="column.name"
+        >
+        @for (item of column.tasks; track item) {
+          <app-task-item [task]="item" (taskDeleted)="onDeleteTask($event)" cdkDrag></app-task-item>
         }
       </div>
 
