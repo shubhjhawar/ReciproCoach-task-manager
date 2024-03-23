@@ -17,12 +17,11 @@
   </mat-form-field>
   <mat-form-field class="w-full">
     <mat-label>Due Date</mat-label>
-    <input matInput [matDatepicker]="picker" [(ngModel)]="EditedTaskFields.dueDate">
+    <input matInput [matDatepicker]="picker" [(ngModel)]="EditedTaskFields.fixed_dueDate">
     <mat-hint>MM/DD/YYYY</mat-hint>
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker class="datepicker"></mat-datepicker>
   </mat-form-field>
-  <mat-checkbox [(ngModel)]="EditedTaskFields.repeat">Repeat</mat-checkbox>
 </mat-dialog-content>
 <mat-dialog-actions class="mat-dialog-actions-centered">
   <button mat-button class="w-1/3 bg-red-400 hover:bg-red-500 text-white px-4 py-2 rounded-md" (click)="onCancelClick()">Cancel</button>

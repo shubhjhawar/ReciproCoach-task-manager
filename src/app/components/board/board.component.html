@@ -23,7 +23,7 @@
             </svg>
           </button>
         </div>
-        <app-add-task-dialog (taskAdded)="addTask($event)"></app-add-task-dialog>
+        <app-add-task-dialog [columnName]="column.name" (taskAdded)="addTask($event)" (repeatTaskAdded)="addRepeatTasks($event)"></app-add-task-dialog>
     </div>
     <div
         cdkDropList
@@ -31,7 +31,7 @@
         [cdkDropListData]="column.tasks"
         [cdkDropListAutoScrollDisabled]="true"
         (cdkDropListDropped)="drop($event)">
-        @for (item of column.tasks; track item) {
+        @for (item of filterTasks(column.tasks); track item) {
           <app-task-item [task]="item" class="example-box" (taskDeleted)="onDeleteTask($event)" cdkDrag></app-task-item>
         }
       </div>

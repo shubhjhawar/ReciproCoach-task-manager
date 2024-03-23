@@ -3,8 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
-
+import { WeeklyComponent } from '../weekly/weekly.component';
 
 @NgModule({
   declarations: [],
@@ -12,7 +11,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     CommonModule,
     MatDialogModule,
     MatDatepickerModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    WeeklyComponent
   ]
 })
 export class AddTaskDialogModule { }

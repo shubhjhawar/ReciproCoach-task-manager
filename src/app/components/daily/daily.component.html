@@ -1,0 +1,8 @@
+<form (ngSubmit)="submitForm()" class="flex flex-col justify-center gap-2">
+    <div class="flex gap-2 items-center justify-start">
+        <p>in</p>
+        <input min="1" class="bg-gray-100 pl-2 py-2 w-20" matInput type="number" [(ngModel)]="dailyFormData.frequency" name="frequency" value="0" required (change)="onFrequencyChange($event)">
+        <p>days</p>
+    </div>
+</form>
+

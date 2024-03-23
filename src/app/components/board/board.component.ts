@@ -14,7 +14,19 @@ import { MatDialog } from '@angular/material/dialog';
 import { Task } from '../../models/task.model';
 import { TaskItemComponent } from '../task-item/task-item.component';
 import { FormsModule } from '@angular/forms';
-
+import { Board } from '../../models/board.model';
+import {
+  isToday,
+  isTomorrow,
+  isThisWeek,
+  isNextWeek,
+  isThisMonth,
+  isNextMonth,
+  isThisQuarter,
+  isNextQuarter,
+  isThisYear,
+  isNextYear
+} from '../../../utils/date-utils';
 
 @Component({
   selector: 'app-board',
@@ -24,6 +36,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './board.component.css',
 })
 export class BoardComponent {
+  @Input() board!: Board;
   constructor(private dialog: MatDialog) {}
 
   @Input() column!: Column;
@@ -52,8 +65,9 @@ export class BoardComponent {
   }
 
   addTask(task: Task): void {
-    const newTask = new Task(task.heading, task.description, task.dueDate, task.repeat);
+    const newTask = new Task(task.heading, task.description, task.fixed_dueDate, task.variable_dueDate, null, false);
     this.column.tasks.push(newTask);
+    console.log("hehe")
   }
 
   onDeleteTask(task: Task): void {
@@ -80,4 +94,77 @@ export class BoardComponent {
     this.ColumnDeleted.emit(column)
   }
 
+  filterTasks(tasks: Task[]): Task[] {
+    const currentDate = new Date();
+    let uniqueTasks: Map<string, Task> = new Map(); // Map to store unique tasks by their unique identifier
+    let closestRepeatTask: Task | null = null;
+
+    tasks.forEach(task => {
+        // Check if the task is a repeat task
+        if (task.repeat) {
+            // If there is no closest repeat task yet or if the current task is closer to the current date
+            if (!closestRepeatTask || Math.abs(task.fixed_dueDate.getTime() - currentDate.getTime()) < Math.abs(closestRepeatTask.fixed_dueDate.getTime() - currentDate.getTime())) {
+                closestRepeatTask = task;
+            }
+            // Add the closest repeat task (if any) to the unique tasks map
+            if (closestRepeatTask) {
+                uniqueTasks.set(closestRepeatTask.heading, closestRepeatTask);
+            }
+        } else {
+            // For non-repeat tasks, add them directly to the unique tasks map
+            uniqueTasks.set(task.heading, task);
+        }
+    });
+
+    // Convert the map values (unique tasks) back to an array and return it
+    return Array.from(uniqueTasks.values());
 }
+
+
+  
+
+  addRepeatTasks(repeatedTasks: Task[]): void {
+    repeatedTasks.forEach(task => {
+      const dueDate = task.fixed_dueDate;
+      task.repeat = true;
+      if (!dueDate) return; // Skip tasks with no due date
+      for (const column of this.board.columns) {
+        if (this.isTaskInColumnTimeFrame(task, column)) {
+          column.tasks.push(task);
+          break;
+        }
+      }
+    });
+  }
+
+  isTaskInColumnTimeFrame(task: Task, column: Column): boolean {
+    const dueDate = new Date(task.fixed_dueDate);
+    switch (column.name) {
+      case 'Today':
+        return isToday(dueDate);
+      case 'Tomorrow':
+        return isTomorrow(dueDate);
+      case 'This Week':
+        return isThisWeek(dueDate);
+      case 'Next Week':
+        return isNextWeek(dueDate);
+      case 'This Month':
+        return isThisMonth(dueDate);
+      case 'Next Month':
+        return isNextMonth(dueDate);
+      case 'This Quarter':
+        return isThisQuarter(dueDate);
+      case 'Next Quarter':
+        return isNextQuarter(dueDate);
+      case 'This Year':
+        return isThisYear(dueDate);
+      case 'Next Year':
+        return isNextYear(dueDate);
+      default:
+        return false;
+    }
+  }
+
+
+}
+

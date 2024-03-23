@@ -1,0 +1,15 @@
+<form (ngSubmit)="submitForm()" class="flex flex-col justify-center gap-2">
+    <div class="flex gap-2 items-center justify-start">
+        <p>Every</p>
+        <input min="1" class="bg-gray-100 pl-2 py-2 w-20" matInput type="number" [(ngModel)]="weeklyFormData.frequency" value="1" required (change)="onFrequencyChange($event)">
+        <p>weeks</p>
+    </div>
+
+    <div class="flex flex-wrap gap-1">
+        @for (day of daysOfWeek; track day) {
+            <mat-checkbox (change)="updateSelectedDays(day, $event.checked)">
+                {{ day }}
+            </mat-checkbox>
+        }
+    </div>
+</form>

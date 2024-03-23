@@ -6,6 +6,7 @@ import {
   CdkDrag,
   CdkDropList,
 } from '@angular/cdk/drag-drop';
+import { RouterModule } from '@angular/router';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { Board } from '../../models/board.model';
 import { Column } from '../../models/column.model';
@@ -17,7 +18,7 @@ import { Task } from '../../models/task.model';
 @Component({
   selector: 'app-main-view',
   standalone: true,
-  imports: [DragDropModule, CommonModule, AddBoxDialogComponent, BoardComponent],
+  imports: [DragDropModule, CommonModule, AddBoxDialogComponent, BoardComponent, RouterModule],
   templateUrl: './main-view.component.html',
   styleUrl: './main-view.component.css'
 })
@@ -25,17 +26,17 @@ export class MainViewComponent {
 
   // Create tasks for the 'Ideas' column
 ideasTasks: Task[] = [
-  new Task('some random idea', 'Description for some random idea', new Date(), false),
-  new Task('This is random', 'Description for This is random', new Date(), false),
-  new Task('build', 'Description for build', new Date(), false)
+  new Task('some random idea', 'Description for some random idea', new Date(), new Date(), null, false),
+  new Task('This is random', 'Description for This is random', new Date(),new Date(), null, false),
+  new Task('build', 'Description for build', new Date(), new Date(), null, false)
 ];
 
-// Create tasks for the 'Ideassfsdfs' column
-ideassfsdfsTasks: Task[] = [
-  new Task('some random idead', 'Description for some random idead', new Date(), false),
-  new Task('This is randomasasdasd asdsa', 'Description for This is randomasasd asdasdsa', new Date(), false),
-  new Task('build asdsa', 'Description for build asdsa', new Date(), false)
-];
+// // Create tasks for the 'Ideassfsdfs' column
+// ideassfsdfsTasks: Task[] = [
+//   new Task('some random idead', 'Description for some random idead', new Date(),new Date(), false),
+//   new Task('This is randomasasdasd asdsa', 'Description for This is randomasasd asdasdsa', new Date(),new Date(), false),
+//   new Task('build asdsa', 'Description for build asdsa', new Date(),new Date(), false)
+// ];
 
 // Instantiate the Board object with the provided columns and tasks
 board: Board = new Board('First Board', [
