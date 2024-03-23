@@ -5,6 +5,6 @@
     </div>
     <div class="description">
         <p>{{task.description}}</p>
-        <p *ngIf="task.fixed_dueDate" class="text-red-500">{{formatDate(task.fixed_dueDate)}}</p>
+        <p *ngIf="task.variable_dueDate" class="text-red-500">{{formatDate(task.variable_dueDate)}}</p>
     </div>
 </div>
