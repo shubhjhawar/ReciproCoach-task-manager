@@ -179,21 +179,22 @@ export class BoardComponent {
     let closestRepeatTask: Task | null = null;
 
     tasks.forEach(task => {
-        // Check if the task is a repeat task
-        if (task.repeat) {
-            const timeInQuestion = new Date(task.fixed_dueDate)
-            // If there is no closest repeat task yet or if the current task is closer to the current date
-            if (!closestRepeatTask || Math.abs(timeInQuestion.getTime() - currentDate.getTime()) < Math.abs(new Date(closestRepeatTask.fixed_dueDate).getTime() - currentDate.getTime())) {
-                closestRepeatTask = task;
-            }
-            // Add the closest repeat task (if any) to the unique tasks map
-            if (closestRepeatTask) {
-                uniqueTasks.set(closestRepeatTask.heading, closestRepeatTask);
-            }
-        } else {
-            // For non-repeat tasks, add them directly to the unique tasks map
-            uniqueTasks.set(task.heading, task);
-        }
+        uniqueTasks.set(task.heading, task);
+        // // Check if the task is a repeat task
+        // if (task.repeat) {
+        //     const timeInQuestion = new Date(task.fixed_dueDate)
+        //     // If there is no closest repeat task yet or if the current task is closer to the current date
+        //     if (!closestRepeatTask || Math.abs(timeInQuestion.getTime() - currentDate.getTime()) < Math.abs(new Date(closestRepeatTask.fixed_dueDate).getTime() - currentDate.getTime())) {
+        //         closestRepeatTask = task;
+        //     }
+        //     // Add the closest repeat task (if any) to the unique tasks map
+        //     if (closestRepeatTask) {
+        //         uniqueTasks.set(closestRepeatTask.heading, closestRepeatTask);
+        //     }
+        // } else {
+        //     // For non-repeat tasks, add them directly to the unique tasks map
+        //     uniqueTasks.set(task.heading, task);
+        // }
     });
 
     // Convert the map values (unique tasks) back to an array and return it

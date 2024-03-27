@@ -18,7 +18,7 @@
   <mat-checkbox [(ngModel)]="taskFields.repeat">Repeat</mat-checkbox>
   <div class="flex my-2 gap-5" *ngIf="taskFields.repeat">
     <mat-label>Frequency:</mat-label>
-    <mat-select [(ngModel)]="taskFields.repeatFrequency">
+    <mat-select [(ngModel)]="taskFields.repeatFrequency" class="bg-gray-100 p-1">
       <mat-option value="daily">Daily</mat-option>
       <mat-option value="weekly">Weekly</mat-option>
       <mat-option value="monthly">Monthly</mat-option>
