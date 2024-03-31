@@ -109,7 +109,7 @@ export class BoardComponent {
   }
 
   addTask(task: Task): void {
-    const newTask = new Task(task.heading, task.description, task.fixed_dueDate, task.variable_dueDate, null, false);  
+    const newTask = new Task(task.heading, task.description, task.fixed_dueDate, task.variable_dueDate, null, false, null);  
     const columnName = this.column.name;
     
     const boardFromLocalStorage = JSON.parse(localStorage.getItem("board") || "{}");  

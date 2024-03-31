@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 const daysOfWeek: string[] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const endDate = new Date();
 endDate.setMonth(endDate.getMonth() + 6);
@@ -11,6 +12,8 @@ export function generateWeeklyTasks(selectedDays: string[], frequency: number, t
       return [];
     }
     const generatedTasks = [];
+    const repeatID = uuidv4();
+
     // Generate tasks based on the weekly data
     while (currentDate < endDate) {
       const dayIndex = currentDate.getDay();
@@ -20,7 +23,8 @@ export function generateWeeklyTasks(selectedDays: string[], frequency: number, t
           const task = {
             heading: taskFields.heading,
             description: taskFields.description,
-            fixed_dueDate: addDays(currentDate, i)
+            fixed_dueDate: addDays(currentDate, i),
+            repeatID: repeatID
           };
           generatedTasks.push(task);
         }

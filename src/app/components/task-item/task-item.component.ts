@@ -91,7 +91,8 @@ export class EditTaskItemComponent {
     description: this.task.description,
     fixed_dueDate: this.task.fixed_dueDate,
     variable_dueDate: this.task.variable_dueDate,
-    repeat: this.task.repeat
+    repeat: this.task.repeat,
+    repeatID: this.task.repeatID
   };
 
   onCancelClick(): void {
@@ -117,8 +118,39 @@ export class EditTaskItemComponent {
   
   }
 
+  onEditRepeatTaskClick(repeatId: string): void {
+    const boardFromLocalStorage = JSON.parse(localStorage.getItem("board") || "{}");
+    boardFromLocalStorage.columns.forEach((column: any) => {
+      column.tasks.forEach((task: Task) => {
+        if (task.repeatID === repeatId) {
+          task.heading = this.EditedTaskFields.heading;
+          task.description = this.EditedTaskFields.description;
+          task.fixed_dueDate = this.EditedTaskFields.fixed_dueDate;
+          task.variable_dueDate = this.EditedTaskFields.variable_dueDate;
+        }
+      });
+    });
+    localStorage.setItem("board", JSON.stringify(boardFromLocalStorage));
+    window.location.reload();
+    this.dialogRef.close();
+  }
+
   deleteTask(): void {
     this.taskDeleted.emit(this.task);
+    this.dialogRef.close();
+  }
+
+  deleteRepeatTask(): void {
+    const boardFromLocalStorage = JSON.parse(localStorage.getItem("board") || "{}");
+    boardFromLocalStorage.columns.forEach((column: any) => {
+      column.tasks.forEach((task: Task) => {
+        if (task.repeatID === this.task.repeatID) {
+          column.tasks = column.tasks.filter((t: Task) => t.repeatID !== this.task.repeatID);
+        }
+      });
+    });
+    localStorage.setItem("board", JSON.stringify(boardFromLocalStorage));
+    window.location.reload();
     this.dialogRef.close();
   }
 

@@ -5,6 +5,7 @@ export class Task {
         public fixed_dueDate: Date,
         public variable_dueDate: Date,
         public repeat: boolean | null,
-        public complete: boolean
+        public complete: boolean,
+        public repeatID: string | null
     ) {}
 }

@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 function generateDatesForDailyRepeatTasks(dailyFrequency: any) {
     const currentDate = new Date();
     const endDate = new Date(currentDate);
@@ -17,12 +19,14 @@ function generateDatesForDailyRepeatTasks(dailyFrequency: any) {
 export function generateDailyTasks(dailyFrequency: number, taskFields: any) {
     const dates = generateDatesForDailyRepeatTasks(dailyFrequency);
     const generatedTasks: any[] = [];
+    const repeatID = uuidv4();
 
     dates.forEach((date: Date) => {
         const task = {
             heading: taskFields.heading,
             description: taskFields.description,
-            fixed_dueDate: new Date(date)
+            fixed_dueDate: new Date(date),
+            repeatID: repeatID
         };
         generatedTasks.push(task);
     });
