@@ -186,56 +186,69 @@ export class BoardComponent {
     
     uniqueTasks.forEach((task, key) => {
       const timeInQuestion = new Date(task.fixed_dueDate)
-      if(task.repeat === null){
+      if(!task.repeat){
         visibleTasks.push(task)
       }
 
-      if(task.repeatFrequency === 'daily' && columnName==="Today"){
-        // if(isToday(timeInQuestion)){
-          visibleTasks.push(task)
-        // }
-      } else if(task.repeatFrequency === 'daily' && columnName==="Tomorrow"){
-        // if(isTomorrow(timeInQuestion)){
-          visibleTasks.push(task)
-        // }
-      } else if(task.repeatFrequency === 'weekly' && columnName==="This Week"){
-        // if(isThisWeek(timeInQuestion)){
-          visibleTasks.push(task)
-        // }
-      } else if(task.repeatFrequency === 'weekly' && columnName==="Next Week"){
-        // if(isNextWeek(timeInQuestion)){
-          visibleTasks.push(task)
-        // }
-      } else if(task.repeatFrequency === 'monthly' && columnName==="This Month"){
-        // if(isThisMonth(timeInQuestion)){
-          visibleTasks.push(task)
-        // }
-      } else if(task.repeatFrequency === 'monthly' && columnName==="Next Month"){
-        // if(isNextMonth(timeInQuestion)){
-          visibleTasks.push(task)
-        // }
-      } else if(task.repeatFrequency === 'yearly' && columnName==="This Year"){
-        // if(isThisYear(timeInQuestion)){
-          visibleTasks.push(task)
-        // }
-      } else if(task.repeatFrequency === 'yearly' && columnName==="Next Year"){
-        // if(isNextYear(timeInQuestion)){
-          visibleTasks.push(task)
-        // }
-      } else if(columnName==="This Quarter"){
-        // if(isThisQuarter(timeInQuestion)){
-          visibleTasks.push(task)
-        // }
-      } else if(columnName==="Next Quarter"){
-        // if(isNextQuarter(timeInQuestion)){
-          visibleTasks.push(task)
-        // }
+      // Include tasks based on their repeat frequency and the specified column
+      if (task.repeatFrequency === 'daily' && (columnName === "Today" || columnName === "Tomorrow")) {
+          visibleTasks.push(task);
+      } else if (task.repeatFrequency === 'weekly' && (columnName === "This Week" || columnName === "Next Week")) {
+          visibleTasks.push(task);
+      } else if (task.repeatFrequency === 'monthly' && (columnName === "This Month" || columnName === "Next Month")) {
+          visibleTasks.push(task);
+      } else if (task.repeatFrequency === 'yearly' && (columnName === "This Year" || columnName === "Next Year")) {
+          visibleTasks.push(task);
+      } else if (columnName === "This Quarter" || columnName === "Next Quarter") {
+          visibleTasks.push(task);
       }
+
+      // if(task.repeatFrequency === 'daily' && columnName==="Today"){
+      //   // if(isToday(timeInQuestion)){
+      //     visibleTasks.push(task)
+      //   // }
+      // } else if(task.repeatFrequency === 'daily' && columnName==="Tomorrow"){
+      //   // if(isTomorrow(timeInQuestion)){
+      //     visibleTasks.push(task)
+      //   // }
+      // } else if(task.repeatFrequency === 'weekly' && columnName==="This Week"){
+      //   // if(isThisWeek(timeInQuestion)){
+      //     visibleTasks.push(task)
+      //   // }
+      // } else if(task.repeatFrequency === 'weekly' && columnName==="Next Week"){
+      //   // if(isNextWeek(timeInQuestion)){
+      //     visibleTasks.push(task)
+      //   // }
+      // } else if(task.repeatFrequency === 'monthly' && columnName==="This Month"){
+      //   // if(isThisMonth(timeInQuestion)){
+      //     visibleTasks.push(task)
+      //   // }
+      // } else if(task.repeatFrequency === 'monthly' && columnName==="Next Month"){
+      //   // if(isNextMonth(timeInQuestion)){
+      //     visibleTasks.push(task)
+      //   // }
+      // } else if(task.repeatFrequency === 'yearly' && columnName==="This Year"){
+      //   // if(isThisYear(timeInQuestion)){
+      //     visibleTasks.push(task)
+      //   // }
+      // } else if(task.repeatFrequency === 'yearly' && columnName==="Next Year"){
+      //   // if(isNextYear(timeInQuestion)){
+      //     visibleTasks.push(task)
+      //   // }
+      // } else if(columnName==="This Quarter"){
+      //   // if(isThisQuarter(timeInQuestion)){
+      //     visibleTasks.push(task)
+      //   // }
+      // } else if(columnName==="Next Quarter"){
+      //   // if(isNextQuarter(timeInQuestion)){
+      //     visibleTasks.push(task)
+      //   // }
+      // }
       
     })
     // Convert the map values (unique tasks) back to an array and return it
     // console.log("check here-",columnName, visibleTasks.values())
-    return Array.from(uniqueTasks.values());
+    return Array.from(visibleTasks.values());
   }
 
   addRepeatTasks(repeatedTasks: Task[]): void {
