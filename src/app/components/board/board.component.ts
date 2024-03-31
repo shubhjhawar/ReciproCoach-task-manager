@@ -109,7 +109,7 @@ export class BoardComponent {
   }
 
   addTask(task: Task): void {
-    const newTask = new Task(task.heading, task.description, task.fixed_dueDate, task.variable_dueDate, null, false);  
+    const newTask = new Task(task.heading, task.description, task.fixed_dueDate, task.variable_dueDate, null, false, null, null);  
     const columnName = this.column.name;
     
     const boardFromLocalStorage = JSON.parse(localStorage.getItem("board") || "{}");  
@@ -173,31 +173,68 @@ export class BoardComponent {
     this.ColumnDeleted.emit(column)
   }
 
-  filterTasks(tasks: Task[]): Task[] {
+  filterTasks(columnName: string, tasks: Task[]): Task[] {
     const currentDate = new Date();
-    let uniqueTasks: Map<string, Task> = new Map(); // Map to store unique tasks by their unique identifier
-    let closestRepeatTask: Task | null = null;
+    let uniqueTasks: Map<string, Task> = new Map(); 
 
     tasks.forEach(task => {
         uniqueTasks.set(task.heading, task);
-        // // Check if the task is a repeat task
-        // if (task.repeat) {
-        //     const timeInQuestion = new Date(task.fixed_dueDate)
-        //     // If there is no closest repeat task yet or if the current task is closer to the current date
-        //     if (!closestRepeatTask || Math.abs(timeInQuestion.getTime() - currentDate.getTime()) < Math.abs(new Date(closestRepeatTask.fixed_dueDate).getTime() - currentDate.getTime())) {
-        //         closestRepeatTask = task;
-        //     }
-        //     // Add the closest repeat task (if any) to the unique tasks map
-        //     if (closestRepeatTask) {
-        //         uniqueTasks.set(closestRepeatTask.heading, closestRepeatTask);
-        //     }
-        // } else {
-        //     // For non-repeat tasks, add them directly to the unique tasks map
-        //     uniqueTasks.set(task.heading, task);
-        // }
     });
+    console.log(columnName)
+    // console.log(uniqueTasks)
+    let visibleTasks: Task[] = [];
+    
+    uniqueTasks.forEach((task, key) => {
+      const timeInQuestion = new Date(task.fixed_dueDate)
+      if(task.repeat === null){
+        visibleTasks.push(task)
+      }
 
+      if(task.repeatFrequency === 'daily' && columnName==="Today"){
+        // if(isToday(timeInQuestion)){
+          visibleTasks.push(task)
+        // }
+      } else if(task.repeatFrequency === 'daily' && columnName==="Tomorrow"){
+        // if(isTomorrow(timeInQuestion)){
+          visibleTasks.push(task)
+        // }
+      } else if(task.repeatFrequency === 'weekly' && columnName==="This Week"){
+        // if(isThisWeek(timeInQuestion)){
+          visibleTasks.push(task)
+        // }
+      } else if(task.repeatFrequency === 'weekly' && columnName==="Next Week"){
+        // if(isNextWeek(timeInQuestion)){
+          visibleTasks.push(task)
+        // }
+      } else if(task.repeatFrequency === 'monthly' && columnName==="This Month"){
+        // if(isThisMonth(timeInQuestion)){
+          visibleTasks.push(task)
+        // }
+      } else if(task.repeatFrequency === 'monthly' && columnName==="Next Month"){
+        // if(isNextMonth(timeInQuestion)){
+          visibleTasks.push(task)
+        // }
+      } else if(task.repeatFrequency === 'yearly' && columnName==="This Year"){
+        // if(isThisYear(timeInQuestion)){
+          visibleTasks.push(task)
+        // }
+      } else if(task.repeatFrequency === 'yearly' && columnName==="Next Year"){
+        // if(isNextYear(timeInQuestion)){
+          visibleTasks.push(task)
+        // }
+      } else if(columnName==="This Quarter"){
+        // if(isThisQuarter(timeInQuestion)){
+          visibleTasks.push(task)
+        // }
+      } else if(columnName==="Next Quarter"){
+        // if(isNextQuarter(timeInQuestion)){
+          visibleTasks.push(task)
+        // }
+      }
+      
+    })
     // Convert the map values (unique tasks) back to an array and return it
+    // console.log("check here-",columnName, visibleTasks.values())
     return Array.from(uniqueTasks.values());
   }
 

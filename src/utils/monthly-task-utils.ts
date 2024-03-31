@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 const daysOfWeek: any = {
     'Sunday': 0,
     'Monday': 1,
@@ -100,12 +102,16 @@ function generateDatesForMonthlyRepeatTasks(weekNumber: any, dayOfWeek: string, 
 export function generateMonthlyTasks(monthFrequency: number, monthSelectedWeek: number, monthSelectedDay: string, taskFields: any) {
     const dates = generateDatesForMonthlyRepeatTasks(monthSelectedWeek, monthSelectedDay, monthFrequency);
     const generatedTasks: any = [];
+    const repeatID = uuidv4();
+
 
     dates.forEach((date: Date) => {
         const task = {
             heading: taskFields.heading,
             description: taskFields.description,
-            fixed_dueDate: date  
+            fixed_dueDate: date,
+            repeatID: repeatID,
+            repeatFrequency: 'monthly'
         };
         generatedTasks.push(task);
     });
