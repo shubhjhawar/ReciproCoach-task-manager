@@ -10,14 +10,35 @@
   </mat-form-field>
   <mat-form-field class="w-full">
     <mat-label>Due Date</mat-label>
-    <input matInput [matDatepicker]="datepicker" [(ngModel)]="taskFields.dueDate">
+    <input matInput [matDatepicker]="datepicker" [(ngModel)]="taskFields.fixed_dueDate">
     <mat-hint>MM/DD/YYYY</mat-hint>
     <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
     <mat-datepicker #datepicker></mat-datepicker>
   </mat-form-field>
   <mat-checkbox [(ngModel)]="taskFields.repeat">Repeat</mat-checkbox>
+  <div class="flex my-2 gap-5" *ngIf="taskFields.repeat">
+    <mat-label>Frequency:</mat-label>
+    <mat-select [(ngModel)]="taskFields.repeatFrequency" class="bg-gray-100 p-1">
+      <mat-option value="daily">Daily</mat-option>
+      <mat-option value="weekly">Weekly</mat-option>
+      <mat-option value="monthly">Monthly</mat-option>
+      <mat-option value="annually">Annually</mat-option>
+    </mat-select>
+  </div>
+  <div *ngIf="taskFields.repeatFrequency === 'daily' && taskFields.repeat">
+    <app-daily (dailyDataEmitter)="receiveDailyData($event)"></app-daily>
+  </div>
+  <div *ngIf="taskFields.repeatFrequency === 'weekly' && taskFields.repeat">
+    <app-weekly (weeklyDataEmitter)="receiveWeeklyData($event)"></app-weekly>
+  </div>
+  <div *ngIf="taskFields.repeatFrequency === 'monthly' && taskFields.repeat">    
+    <app-monthly (monthlyDataEmitter)="receiveMonthlyData($event)"></app-monthly>
+  </div>
+  <div *ngIf="taskFields.repeatFrequency === 'annually' && taskFields.repeat">    
+    <app-yearly (yearlyDataEmitter)="receiveYearlyData($event)"></app-yearly>
+  </div>
 </mat-dialog-content>
 <mat-dialog-actions class="mat-dialog-actions-centered">
   <button mat-button class="w-1/3 bg-red-400 hover:bg-red-500 text-white px-4 py-2 rounded-md" (click)="onCancelClick()">Cancel</button>
-  <button mat-button [disabled]="!taskFields" class="w-1/3 bg-blue-400 hover:bg-blue-500 text-white px-4 py-2 rounded-md" (click)="onAddTaskClick()">Add</button>
+  <button mat-button [disabled]="!taskFields" class="w-1/3 bg-blue-400 hover:bg-blue-500 text-white px-4 py-2 rounded-md" (click)="onAddTaskClick()">Add Task</button>
 </mat-dialog-actions>

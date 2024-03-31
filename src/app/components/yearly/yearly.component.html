@@ -1,0 +1,48 @@
+<form (ngSubmit)="submitForm()" class="flex flex-col justify-center gap-2">
+    <div class="flex gap-2 items-center justify-start">
+        <p>Every</p>
+        <input min="1" class="bg-gray-100 pl-2 py-2 w-20" matInput type="number" [(ngModel)]="yearlyFormData.frequency" name="frequency" value="1" required (change)="onFrequencyChange($event)">
+        <p>years</p>
+    </div>
+    <div class="w-full h-[2px] bg-gray-300"></div>
+    <div class="flex flex-col justify-start items-start gap-2 my-2">
+        <p>in the month of</p>
+        <mat-button-toggle-group [(ngModel)]="yearlyFormData.selectedMonth" class="flex flex-wrap" name="selectedMonth" (change)="onMonthChange($event)">
+            <mat-button-toggle value="January">Jan</mat-button-toggle>
+            <mat-button-toggle value="Feburay">Feb</mat-button-toggle>
+            <mat-button-toggle value="March">Mar</mat-button-toggle>
+            <mat-button-toggle value="April">Apr</mat-button-toggle>
+            <mat-button-toggle value="May">May</mat-button-toggle>
+            <mat-button-toggle value="June">Jun</mat-button-toggle>
+            <mat-button-toggle value="July">Jul</mat-button-toggle>
+            <mat-button-toggle value="August">Aug</mat-button-toggle>
+            <mat-button-toggle value="September">Sept</mat-button-toggle>
+            <mat-button-toggle value="October">Oct</mat-button-toggle>
+            <mat-button-toggle value="November">Nov</mat-button-toggle>
+            <mat-button-toggle value="December">Dec</mat-button-toggle>
+        </mat-button-toggle-group>
+    </div>
+    <div class="w-full h-[2px] bg-gray-300"></div>
+    <div class="flex flex-col justify-start items-start gap-2 my-2">
+        <p>On The</p>
+        <mat-button-toggle-group [(ngModel)]="yearlyFormData.selectedWeek" class="flex flex-wrap w-fit" name="selectedWeek" (change)="onWeekChange($event)">
+            <mat-button-toggle value="1">First</mat-button-toggle>
+            <mat-button-toggle value="2">Second</mat-button-toggle>
+            <mat-button-toggle value="3">Third</mat-button-toggle>
+            <mat-button-toggle value="4">Fourth</mat-button-toggle>
+            <mat-button-toggle value="-1">Last</mat-button-toggle>
+        </mat-button-toggle-group>
+        <mat-button-toggle-group [(ngModel)]="yearlyFormData.selectedDay" class="flex flex-wrap w-fit" name="selectedDay" (change)="onDayChange($event)">
+            <mat-button-toggle value="Sunday">Sunday</mat-button-toggle>
+            <mat-button-toggle value="Monday">Monday</mat-button-toggle>
+            <mat-button-toggle value="Tuesday">Tuesday</mat-button-toggle>
+            <mat-button-toggle value="Wednesday">Wednesday</mat-button-toggle>
+            <mat-button-toggle value="Thursday">Thursday</mat-button-toggle>
+            <mat-button-toggle value="Friday">Friday</mat-button-toggle>
+            <mat-button-toggle value="Saturday">Saturday</mat-button-toggle>
+            <mat-button-toggle value="Day">Day</mat-button-toggle>
+            <mat-button-toggle value="Weekday">Weekday</mat-button-toggle>
+            <mat-button-toggle value="Weekend day">Weekend day</mat-button-toggle>
+        </mat-button-toggle-group>
+    </div>
+</form>

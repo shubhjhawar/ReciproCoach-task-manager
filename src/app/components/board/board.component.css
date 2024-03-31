@@ -1,6 +1,6 @@
 .example-list {
-  min-height: 50px;
-  background: white;
+  height: 90%;
+  background: rgb(243 244 246);
   border-radius: 4px;
   display: block;
 }
