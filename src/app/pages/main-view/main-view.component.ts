@@ -40,9 +40,9 @@ export class MainViewComponent {
 
   initializeBoard(): void {
     const ideasTasks: Task[] = [
-      new Task('some random idea', 'Description for some random idea', new Date(), new Date(), null, false, null),
-      new Task('This is random', 'Description for This is random', new Date(), new Date(), null, false, null),
-      new Task('build', 'Description for build', new Date(), new Date(), null, false, null)
+      new Task('some random idea', 'Description for some random idea', new Date(), new Date(), null, false, null, null),
+      new Task('This is random', 'Description for This is random', new Date(), new Date(), null, false, null, null),
+      new Task('build', 'Description for build', new Date(), new Date(), null, false, null, null)
     ];
   
     this.board = new Board('First Board', [

@@ -110,7 +110,8 @@ export function generateMonthlyTasks(monthFrequency: number, monthSelectedWeek: 
             heading: taskFields.heading,
             description: taskFields.description,
             fixed_dueDate: date,
-            repeatID: repeatID
+            repeatID: repeatID,
+            repeatFrequency: 'monthly'
         };
         generatedTasks.push(task);
     });

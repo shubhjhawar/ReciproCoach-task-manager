@@ -24,7 +24,8 @@ export function generateWeeklyTasks(selectedDays: string[], frequency: number, t
             heading: taskFields.heading,
             description: taskFields.description,
             fixed_dueDate: addDays(currentDate, i),
-            repeatID: repeatID
+            repeatID: repeatID,
+            repeatFrequency: 'weekly'
           };
           generatedTasks.push(task);
         }

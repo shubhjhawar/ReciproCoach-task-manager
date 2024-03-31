@@ -126,7 +126,8 @@ export function generateYearlyTasks(yearFrequency: number, yearSelectedMonth: an
             heading: taskFields.heading,
             description: taskFields.description,
             fixed_dueDate: date,
-            repeatID: repeatID
+            repeatID: repeatID,
+            repeatFrequency: 'yearly'
         };
         generatedTasks.push(task);
     });

@@ -26,7 +26,8 @@ export function generateDailyTasks(dailyFrequency: number, taskFields: any) {
             heading: taskFields.heading,
             description: taskFields.description,
             fixed_dueDate: new Date(date),
-            repeatID: repeatID
+            repeatID: repeatID,
+            repeatFrequency: 'daily'
         };
         generatedTasks.push(task);
     });
