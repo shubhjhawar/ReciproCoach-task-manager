@@ -1,6 +1,5 @@
 import {Component, ElementRef, Inject, PLATFORM_ID, QueryList, ViewChildren} from '@angular/core';
 import {RouterModule} from '@angular/router';
-import {DragDropModule} from '@angular/cdk/drag-drop';
 import {Board} from '../../models/board.model';
 import {Column} from '../../models/column.model';
 import {CommonModule, isPlatformBrowser} from '@angular/common';
@@ -11,7 +10,7 @@ import {Task} from '../../models/task.model';
 @Component({
   selector: 'app-main-view',
   standalone: true,
-  imports: [DragDropModule, CommonModule, AddBoxDialogComponent, BoardComponent, RouterModule],
+  imports: [CommonModule, AddBoxDialogComponent, BoardComponent, RouterModule],
   templateUrl: './main-view.component.html',
   styleUrl: './main-view.component.css'
 })
@@ -73,9 +72,19 @@ export class MainViewComponent {
       }
     }
 
+    const drag = (e: any) => {
+
+    };
+
+    const dragEnd = (e: DragEvent) => {
+      const target = getTarget(e);
+      target?.el.classList.remove("dragging")
+    };
+
     const dragStart = (e: any) => {
       const target = getTarget(e);
       draggingId = target?.id ?? -1;
+      target?.el.classList.add("dragging")
     }
 
     const dragEnter = (e: any) => {
@@ -83,7 +92,6 @@ export class MainViewComponent {
       e.stopPropagation();
       const target = getTarget(e);
       draggingOverId = target?.id ?? -1;
-      target?.el.classList.add("dragging-over")
     }
 
     const dragLeave = (e: any) => {
@@ -91,7 +99,6 @@ export class MainViewComponent {
       e.stopPropagation();
       const target = getTarget(e);
       draggingOverId = target?.id ?? -1;
-      target?.el.classList.remove("dragging-over")
     }
 
     const dragOver = (e: any) => {
@@ -109,15 +116,27 @@ export class MainViewComponent {
       const droppedOnId = target?.id ?? -1;
       moveCol(draggingId, droppedOnId);
       localStorage.setItem('board', JSON.stringify(this.board));
-    }
+    };
 
-    const els = this.elRef.nativeElement.querySelectorAll("app-board");
-    for (const el of els) {
-      el.addEventListener("dragstart", dragStart);
-      el.addEventListener("dragover", dragOver);
-      el.addEventListener("dragenter", dragEnter);
-      el.addEventListener("drop", drop);
-    }
+    const recreateDragAndDropListeners = () => {
+      const els = this.elRef.nativeElement.querySelectorAll("app-board");
+      for (const el of els) {
+        if (el.getAttribute("dragndroplistenersattached") !== true) {
+          el.addEventListener("drag", drag);
+          el.addEventListener("dragstart", dragStart);
+          el.addEventListener("dragend", dragEnd);
+          el.addEventListener("dragover", dragOver);
+          el.addEventListener("dragenter", dragEnter);
+          el.addEventListener("drop", drop);
+          el.setAttribute("dragndroplistenersattached", true);
+        }
+      }
+    };
+
+    this.boards.changes.subscribe(() => {
+      recreateDragAndDropListeners();
+    });
+    recreateDragAndDropListeners();
   }
 
   initializeBoard(): void {
@@ -144,7 +163,6 @@ export class MainViewComponent {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.setItem('board', JSON.stringify(this.board));
     }
-
 
     if (isPlatformBrowser(this.platformId)) {
       localStorage.setItem('board', JSON.stringify(this.board));
