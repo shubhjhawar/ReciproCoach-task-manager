@@ -6,11 +6,12 @@ import {CommonModule, isPlatformBrowser} from '@angular/common';
 import {AddBoxDialogComponent} from '../../components/add-box-dialog/add-box-dialog.component';
 import {BoardComponent} from '../../components/board/board.component';
 import {Task} from '../../models/task.model';
+import {CdkDropListGroup} from "@angular/cdk/drag-drop";
 
 @Component({
   selector: 'app-main-view',
   standalone: true,
-  imports: [CommonModule, AddBoxDialogComponent, BoardComponent, RouterModule],
+  imports: [CommonModule, AddBoxDialogComponent, BoardComponent, RouterModule, CdkDropListGroup],
   templateUrl: './main-view.component.html',
   styleUrl: './main-view.component.css'
 })
