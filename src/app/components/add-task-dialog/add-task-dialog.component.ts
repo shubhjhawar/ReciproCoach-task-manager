@@ -159,27 +159,30 @@ export class TaskDialogData {
   }
 
   onAddTaskClick(): void {
-    if (this.taskFields.repeatFrequency === 'daily') {
-      console.log("check here",this.dailyFrequency)
-      let generatedTasks = generateDailyTasks(this.dailyFrequency, this.taskFields);
-      this.repeatTaskAdded.emit(generatedTasks);
-    } else if (this.taskFields.repeatFrequency === 'weekly') {
-      let generatedTasks = generateWeeklyTasks(this.selectedDays, this.frequency, this.taskFields);
-      this.repeatTaskAdded.emit(generatedTasks);
-    } else if(this.taskFields.repeatFrequency === 'monthly')
-    {
-      let generatedTasks = generateMonthlyTasks(this.monthFrequency, this.monthSelectedWeek, this.monthSelectedDay, this.taskFields);
-      this.repeatTaskAdded.emit(generatedTasks);
-    } else if(this.taskFields.repeatFrequency === 'annually')
-    {
-      let generatedTasks = generateYearlyTasks(this.yearFrequency, this.yearSelectedMonth, this.yearSelectedWeek, this.yearSelectedDay, this.taskFields);
-      this.repeatTaskAdded.emit(generatedTasks);
-    } else {
-      this.setFixedDueDate(this.data.columnName)
-      this.taskAdded.emit(this.taskFields)
-      // Add logic for other repeat frequencies (if applicable)
+    try{
+      if (this.taskFields.repeatFrequency === 'daily') {
+        console.log("check here",this.dailyFrequency)
+        let generatedTasks = generateDailyTasks(this.dailyFrequency, this.taskFields);
+        this.repeatTaskAdded.emit(generatedTasks);
+      } else if (this.taskFields.repeatFrequency === 'weekly') {
+        let generatedTasks = generateWeeklyTasks(this.selectedDays, this.frequency, this.taskFields);
+        this.repeatTaskAdded.emit(generatedTasks);
+      } else if(this.taskFields.repeatFrequency === 'monthly')
+      {
+        let generatedTasks = generateMonthlyTasks(this.monthFrequency, this.monthSelectedWeek, this.monthSelectedDay, this.taskFields);
+        this.repeatTaskAdded.emit(generatedTasks);
+      } else if(this.taskFields.repeatFrequency === 'annually')
+      {
+        let generatedTasks = generateYearlyTasks(this.yearFrequency, this.yearSelectedMonth, this.yearSelectedWeek, this.yearSelectedDay, this.taskFields);
+        this.repeatTaskAdded.emit(generatedTasks);
+      } 
+      
+    } finally {
+        this.setFixedDueDate(this.data.columnName)
+        this.taskAdded.emit(this.taskFields)
+        // Add logic for other repeat frequencies (if applicable)
+        this.dialogRef.close();
     }
-    this.dialogRef.close();
   }
   
   dailyFrequency : number = 0;

@@ -1,26 +1,44 @@
+/* CSS for placeholder */
+.example-placeholder {
+    width: 100%;
+    height: 50px; /* Adjust height as needed */
+    background-color: #ccc; /* Placeholder color */
+    opacity: 0.5; /* Adjust opacity as needed */
+}
+
+/* CSS for preview element */
 .cdk-drag-preview {
-  box-sizing: border-box;
-  border-radius: 4px;
-  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
-              0 8px 10px 1px rgba(0, 0, 0, 0.14),
-              0 3px 14px 2px rgba(0, 0, 0, 0.12);
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+                0 8px 10px 1px rgba(0, 0, 0, 0.14),
+                0 3px 14px 2px rgba(0, 0, 0, 0.12);
 }
 
+/* CSS for hiding placeholder during dragging */
 .cdk-drag-placeholder {
-  opacity: 0;
+    opacity: 0;
 }
 
-.cdk-drag-animating {
-  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+/* CSS for animating the list during dragging */
+.example-container.cdk-drop-list-dragging .example-list:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
-
-.emample-container.cdk-drop-list-dragging .example-list:not(.cdk-drag-placeholder) {
-  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+/* CSS for the drop container */
+.example-container {
+    min-height: 50px;
+    background: white;
+    cursor: pointer;
 }
 
-.emample-container {
-  min-height: 50px;
-  background: white;
-  cursor: pointer;
+/* CSS for the list */
+.example-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.example-list li {
+    display: table-cell;
+    padding: 4px;
 }
