@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
 import { Task } from '../../models/task.model';
-import { NgIf } from '@angular/common';
+import { NgClass, NgIf } from '@angular/common';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
 import { MatDialogActions } from '@angular/material/dialog';
 import {MatInputModule} from '@angular/material/input';
@@ -23,7 +23,7 @@ import { CompletedTask } from '../../models/completed-tasks.model';
 @Component({
   selector: 'app-task-item',
   standalone: true,
-  imports: [NgIf, MatButtonModule, MatBottomSheetModule],
+  imports: [NgIf, MatButtonModule, MatBottomSheetModule, NgClass],
   templateUrl: './task-item.component.html',
   styleUrl: './task-item.component.css' 
 })
@@ -36,6 +36,7 @@ export class TaskItemComponent {
 
   @Input() task!: Task;
   @Output() taskDeleted: EventEmitter<Task> = new EventEmitter<Task>();
+  @Input() matchingTasks: Task[] = [];
 
   onDoubleClick() {
     const dialogRef = this.dialog.open(EditTaskItemComponent, {
@@ -67,6 +68,27 @@ export class TaskItemComponent {
        this.openBottomSheet();
     }
   }
+
+  highlightMatchingWords(heading: string): string {
+    const words = heading.split(/\s+/);
+    console.log(words)
+    this.matchingTasks.some(matchingTask => {
+      console.log(matchingTask)
+    })
+    const highlightedWords = words.map(word => {
+      const isMatch = this.matchingTasks.some(matchingTask =>
+        matchingTask.heading.toLowerCase().includes(word.toLowerCase())
+      );
+      if (isMatch) {
+        return `<span class="highlighted-word">${word}</span>`;
+      } else {
+        return word;
+      }
+    });
+  
+    return highlightedWords.join(' ');
+  }
+  
 
 }
 

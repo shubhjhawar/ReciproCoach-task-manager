@@ -6,8 +6,11 @@
     </div>
 
     <!-- dashboard name -->
-    <div class="bg-slate-200 py-4 px-2 mb-10">
+    <div class="bg-slate-200 py-4 px-2 mb-10 w-full flex justify-between items-center">
         <h2>Your Dashboard</h2>
+        <div>
+            <input type="text" [(ngModel)]="searchTerm" (input)="search()" placeholder="Search...">
+        </div>
     </div>
     
 

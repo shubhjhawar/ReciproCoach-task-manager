@@ -14,11 +14,13 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { AddBoxDialogComponent } from '../../components/add-box-dialog/add-box-dialog.component';
 import { BoardComponent } from '../../components/board/board.component';
 import { Task } from '../../models/task.model';
+import {FormsModule} from '@angular/forms';
+
 
 @Component({
   selector: 'app-main-view',
   standalone: true,
-  imports: [DragDropModule, CommonModule, AddBoxDialogComponent, BoardComponent, RouterModule],
+  imports: [DragDropModule, CommonModule, AddBoxDialogComponent, BoardComponent, RouterModule, FormsModule],
   templateUrl: './main-view.component.html',
   styleUrl: './main-view.component.css'
 })
@@ -99,5 +101,38 @@ export class MainViewComponent {
       this.board.columns.splice(index, 1); // Remove the column from the array
     }
   }
+
+  public searchTerm: string = '';
+  public filteredColumns : any = []
+  public matchingTasks: Task[] = [];
+  search() {
+    if (this.searchTerm.trim() === '') {
+        // If search term is empty, return all tasks from all columns
+        this.filteredColumns = [...this.board.columns];
+        return;
+    }
+
+    // Filter tasks that match the search term
+    const matchingTasks: Task[] = [];
+    for (const column of this.board.columns) {
+        const tasks = column.tasks.filter(task =>
+            task.heading.toLowerCase().includes(this.searchTerm.toLowerCase())
+        );
+        matchingTasks.push(...tasks);
+    }
+
+    // Update filtered columns with only the columns that contain the matching tasks
+    this.filteredColumns = this.board.columns.filter(column =>
+        column.tasks.some(task =>
+            task.heading.toLowerCase().includes(this.searchTerm.toLowerCase())
+        )
+    );
+
+    this.matchingTasks = matchingTasks;
+
+    console.log("Matching tasks = ", matchingTasks);
+}
+
+
 
 }

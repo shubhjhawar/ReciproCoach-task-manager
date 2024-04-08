@@ -37,6 +37,7 @@ import {
 })
 export class BoardComponent {
   @Input() board!: Board;
+  @Input() matchingTasks: Task[] = [];
   constructor(private dialog: MatDialog) {}
 
   @Input() column!: Column;
@@ -180,7 +181,7 @@ export class BoardComponent {
     tasks.forEach(task => {
         uniqueTasks.set(task.heading, task);
     });
-    console.log(columnName)
+    // console.log(columnName)
     // console.log(uniqueTasks)
     let visibleTasks: Task[] = [];
     

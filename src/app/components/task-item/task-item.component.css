@@ -39,4 +39,8 @@
 .datepicker{
     z-index: 100000 !important;
 }
+
+.highlighted-word{
+    color: red;
+}
   
