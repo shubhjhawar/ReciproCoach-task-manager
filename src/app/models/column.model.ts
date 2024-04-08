@@ -1,6 +1,6 @@
 import { Task } from "./task.model";
 export class Column {
-    constructor(public name: string, public inbuilt: boolean, public tasks: Task[]) {
-        
+    constructor(public name: string, public inbuilt: boolean, public tasks: Task[], public id: number) {
+
     }
 }
