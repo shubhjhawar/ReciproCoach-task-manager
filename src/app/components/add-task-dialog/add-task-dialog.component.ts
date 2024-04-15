@@ -4,7 +4,7 @@ import {MatButtonModule} from '@angular/material/button';
 import { MatDialogActions } from '@angular/material/dialog';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {FormsModule} from '@angular/forms';
+import {FormsModule} from '@angular/forms'; 
 import { EventEmitter } from '@angular/core';
 import { MatDatepickerModule } from "@angular/material/datepicker"
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -80,8 +80,9 @@ export class TaskDialogData {
 
   @Output() taskAdded: EventEmitter<any> = new EventEmitter<any>();
   @Output() repeatTaskAdded: EventEmitter<any> = new EventEmitter<any>();
-
+  
   onCancelClick(): void {
+    console.log(this.data.columnName)
     this.dialogRef.close();
   }
 
@@ -159,18 +160,15 @@ export class TaskDialogData {
 
   onAddTaskClick(): void {
     if (this.taskFields.repeatFrequency === 'daily') {
-      console.log("check here",this.dailyFrequency)
       let generatedTasks = generateDailyTasks(this.dailyFrequency, this.taskFields);
       this.repeatTaskAdded.emit(generatedTasks);
     } else if (this.taskFields.repeatFrequency === 'weekly') {
       let generatedTasks = generateWeeklyTasks(this.selectedDays, this.frequency, this.taskFields);
       this.repeatTaskAdded.emit(generatedTasks);
-    } else if(this.taskFields.repeatFrequency === 'monthly')
-    {
+    } else if(this.taskFields.repeatFrequency === 'monthly') {
       let generatedTasks = generateMonthlyTasks(this.monthFrequency, this.monthSelectedWeek, this.monthSelectedDay, this.taskFields);
       this.repeatTaskAdded.emit(generatedTasks);
-    } else if(this.taskFields.repeatFrequency === 'annually')
-    {
+    } else if(this.taskFields.repeatFrequency === 'annually') {
       let generatedTasks = generateYearlyTasks(this.yearFrequency, this.yearSelectedMonth, this.yearSelectedWeek, this.yearSelectedDay, this.taskFields);
       this.repeatTaskAdded.emit(generatedTasks);
     } else {
@@ -180,7 +178,7 @@ export class TaskDialogData {
     }
     this.dialogRef.close();
   }
-
+  
   dailyFrequency : number = 0;
   receiveDailyData(data: any) {
     console.log('Received daily data in parent:', data.frequency);
@@ -194,7 +192,7 @@ export class TaskDialogData {
     this.frequency = data.frequency
     this.selectedDays = data.selectedDays
   }
-
+  
   monthFrequency: number = 0;
   monthSelectedWeek: number = 0;
   monthSelectedDay: string = '';
@@ -216,5 +214,5 @@ export class TaskDialogData {
     this.yearSelectedWeek = data.selectedWeek
     this.yearSelectedDay = data.selectedDay
   }
-
+  
 }

@@ -1,3 +1,4 @@
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -14,6 +15,10 @@ import { MatNativeDateModule } from '@angular/material/core';
     BrowserAnimationsModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    HttpClientModule
   ],
+  providers: [
+    HttpClientModule
+  ]
 })
 export class AppModule { }
