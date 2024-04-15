@@ -7,7 +7,9 @@ export class Task {
         public repeat: boolean | null,
         public complete: boolean,
         public repeatID: string | null,
-        public repeatFrequency: string | null
+        public repeatFrequency: string | null,
+        public columnId?: string | null,
+        public _id?: string | null
     ) {}
 }
 

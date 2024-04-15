@@ -24,12 +24,3 @@
   background: white;
   cursor: pointer;
 }
-
-app-board {
-  &.dragging-over {
-    /*opacity: 0.3;*/
-  }
-  &.dragging {
-    opacity: 0.3;
-  }
-}

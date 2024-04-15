@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Task } from '../../models/task.model';
-import { CompletedTask } from '../../models/completed-tasks.model';
+import { CommonserviceService } from '../../apiService/commonservice.service';
 
 @Component({
   selector: 'app-completed',
@@ -11,6 +11,23 @@ import { CompletedTask } from '../../models/completed-tasks.model';
   styleUrl: './completed.component.css'
 })
 export class CompletedComponent {
-  completedTasks: Task[] = CompletedTask.tasks;
-  constructor() {}
+  completedTasks: Task[] = [];
+  constructor(private apiService: CommonserviceService) {}
+
+  ngOnInit(): void {
+    this.getAllCompletedTasks();
+  }
+
+  getAllCompletedTasks() {
+    this.apiService.getCompletedTasks().subscribe(
+      (response: any) => {
+        if(response) {
+          this.completedTasks = response.tasks;
+        }
+      },
+      (error: any) => {
+        console.log(error);
+      }
+    );
+  }
 }

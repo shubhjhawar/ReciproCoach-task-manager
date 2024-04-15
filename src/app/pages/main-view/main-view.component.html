@@ -1,30 +1,24 @@
 <div class="example-container flex flex-col">
-  <!-- navbar -->
-  <div class="bg-blue-400 text-white py-4 px-2 flex w-full justify-between items-center">
-    <h1>Task Manager</h1>
-    <a routerLink="/completed" class="text-white bg-blue-900 p-2 rounded-md">Completed Tasks</a>
-  </div>
+    <!-- navbar -->
+    <div class="bg-blue-400 text-white py-4 px-2 flex w-full justify-between items-center">
+        <h1>Task Manager</h1>
+        <a routerLink="/completed" class="text-white bg-blue-900 p-2 rounded-md">Completed Tasks</a>
+    </div>
 
-  <!-- dashboard name -->
-  <div class="bg-slate-200 py-4 px-2 mb-10">
-    <h2>Your Dashboard</h2>
-  </div>
+    <!-- dashboard name -->
+    <div class="bg-slate-200 py-4 px-2 mb-10 flex justify-between items-center">
+        <h2 class="w-50">Your Dashboard</h2>
+        <label for="search"> Search
+            <input class="p-2 " (keyup)="searchTasks($event)" type="text" id="search" placeholder="Type here...">
+        </label>
+    </div>
 
-
-  <div
-    cdkDropListGroup
-    class="example-list grid grid-cols-4 max-md:grid-cols-2 max-sm:grid-cols-1 gap-4 p-4 h-full">
-    @for (item of board.columns; track item) {
-      <app-board
-        [attr.colId]="item.id"
-        [board]="board"
-        (ColumnDeleted)="handleBoxDeleted($event)"
-        class="example-box"
-        [column]="item"
-      ></app-board>
-    }
-    <!-- add box dialog button -->
-    <app-add-box-dialog (boxAdded)="handleBoxAdded($event)"></app-add-box-dialog>
-  </div>
+    <div cdkDropList [cdkDropListData]="board.columns" (cdkDropListDropped)="drop($event)"
+        class="example-list grid grid-cols-4 max-md:grid-cols-2 max-sm:grid-cols-1 gap-4 p-4 h-full" cdkDropListGroup>
+        <ng-container *ngFor="let column of board.columns | searchFilter: searchText: originalBoard">
+            <app-board [board]="board" (ColumnDeleted)="handleBoxDeleted($event)" (taskAdded)="getAllColumns()" class="example-box" [column]="column"
+                cdkDrag></app-board>
+        </ng-container>
+    </div>
 
 </div>

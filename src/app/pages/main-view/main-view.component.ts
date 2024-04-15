@@ -1,164 +1,124 @@
-import {Component, ElementRef, Inject, PLATFORM_ID, QueryList, ViewChildren} from '@angular/core';
-import {RouterModule} from '@angular/router';
-import {Board} from '../../models/board.model';
-import {Column} from '../../models/column.model';
-import {CommonModule, isPlatformBrowser} from '@angular/common';
-import {AddBoxDialogComponent} from '../../components/add-box-dialog/add-box-dialog.component';
-import {BoardComponent} from '../../components/board/board.component';
-import {Task} from '../../models/task.model';
-import {CdkDropListGroup} from "@angular/cdk/drag-drop";
+import {
+  Component,
+  Inject,
+  PLATFORM_ID,
+  EventEmitter,
+  Input,
+} from '@angular/core';
+import {
+  CdkDragDrop,
+  moveItemInArray,
+  transferArrayItem,
+  CdkDrag,
+  CdkDropList,
+} from '@angular/cdk/drag-drop';
+import { RouterModule } from '@angular/router';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { Board } from '../../models/board.model';
+import { Column } from '../../models/column.model';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { AddBoxDialogComponent } from '../../components/add-box-dialog/add-box-dialog.component';
+import { BoardComponent } from '../../components/board/board.component';
+import { Task } from '../../models/task.model';
+import { CommonserviceService } from '../../apiService/commonservice.service';
+import { SearchFilterPipe } from '../../pipes/search-filter.pipe';
+
 
 @Component({
   selector: 'app-main-view',
   standalone: true,
-  imports: [CommonModule, AddBoxDialogComponent, BoardComponent, RouterModule, CdkDropListGroup],
+  imports: [
+    DragDropModule,
+    CommonModule,
+    AddBoxDialogComponent,
+    BoardComponent,
+    RouterModule,
+    SearchFilterPipe
+  ],
   templateUrl: './main-view.component.html',
-  styleUrl: './main-view.component.css'
+  styleUrl: './main-view.component.css',
 })
 export class MainViewComponent {
-  @ViewChildren(BoardComponent) boards!: QueryList<BoardComponent>
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, private elRef: ElementRef) {
-  }
+  searchText!: string;
 
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private apiService: CommonserviceService
+  ) {}
   board: Board = new Board('First Board', []);
+  originalBoard!: Board;
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      const storedBoard = localStorage.getItem('board');
-
-      if (storedBoard) {
-        this.board = JSON.parse(storedBoard);
-      } else {
-        this.initializeBoard();
-      }
+      this.getAllColumns();
     }
   }
 
-  ngAfterViewInit() {
-    let draggingId = -1;
-    let draggingOverId = -1;
-
-    const getTarget = (e: DragEvent) => {
-      let droppedOnId;
-      let droppedOn = e.target as HTMLElement;
-      droppedOnId = (droppedOn as HTMLElement).getAttribute("colId");
-      while (!droppedOnId) {
-        droppedOn = droppedOn.parentElement as HTMLElement;
-        if (!droppedOn) {
-          return;
+  getAllColumns() {
+    this.apiService.getColumns().subscribe(
+      (response: any) => {
+        if(response) {
+          this.board = response;
+          this.board.columns.forEach((elem: any) => {
+            if(!elem.tasks) elem.tasks = [];
+          })
+          this.originalBoard = JSON.parse(JSON.stringify(this.board));
+        } else {
+          this.initializeBoard();
         }
-        droppedOnId = (droppedOn as HTMLElement).getAttribute("colId");
+      },
+      (error: any) => {
+        console.log(error);
       }
-      return {
-        el: droppedOn,
-        id: Number(droppedOnId)
-      }
-    }
-
-    const moveCol = (movedColId: Number, moveToColId: Number) => {
-      let moveFromIndex = -1;
-      let movetoIndex = -1;
-      for (let i = 0; i < this.board.columns.length; i += 1) {
-        const col = this.board.columns[i];
-        if (col.id === movedColId) {
-          moveFromIndex = i;
-        } else if (col.id === moveToColId) {
-          movetoIndex = i;
-        }
-      }
-      if (moveFromIndex >= 0 && movetoIndex >= 0 && moveFromIndex !== movetoIndex) {
-        const movedCol = this.board.columns.splice(moveFromIndex, 1)
-        this.board.columns.splice(movetoIndex, 0, movedCol[0]);
-      }
-    }
-
-    const drag = (e: any) => {
-
-    };
-
-    const dragEnd = (e: DragEvent) => {
-      const target = getTarget(e);
-      target?.el.classList.remove("dragging")
-    };
-
-    const dragStart = (e: any) => {
-      const target = getTarget(e);
-      draggingId = target?.id ?? -1;
-      target?.el.classList.add("dragging")
-    }
-
-    const dragEnter = (e: any) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const target = getTarget(e);
-      draggingOverId = target?.id ?? -1;
-    }
-
-    const dragLeave = (e: any) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const target = getTarget(e);
-      draggingOverId = target?.id ?? -1;
-    }
-
-    const dragOver = (e: any) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const target = getTarget(e);
-      const droppedOnId = target?.id ?? -1;
-      moveCol(draggingId, droppedOnId);
-    }
-
-    const drop = (e: any) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const target = getTarget(e);
-      const droppedOnId = target?.id ?? -1;
-      moveCol(draggingId, droppedOnId);
-      localStorage.setItem('board', JSON.stringify(this.board));
-    };
-
-    const recreateDragAndDropListeners = () => {
-      const els = this.elRef.nativeElement.querySelectorAll("app-board");
-      for (const el of els) {
-        if (el.getAttribute("dragndroplistenersattached") !== true) {
-          el.addEventListener("drag", drag);
-          el.addEventListener("dragstart", dragStart);
-          el.addEventListener("dragend", dragEnd);
-          el.addEventListener("dragover", dragOver);
-          el.addEventListener("dragenter", dragEnter);
-          el.addEventListener("drop", drop);
-          el.setAttribute("dragndroplistenersattached", true);
-        }
-      }
-    };
-
-    this.boards.changes.subscribe(() => {
-      recreateDragAndDropListeners();
-    });
-    recreateDragAndDropListeners();
+    );
   }
 
   initializeBoard(): void {
     const ideasTasks: Task[] = [
-      new Task('some random idea', 'Description for some random idea', new Date(), new Date(), null, false, null, null),
-      new Task('This is random', 'Description for This is random', new Date(), new Date(), null, false, null, null),
-      new Task('build', 'Description for build', new Date(), new Date(), null, false, null, null)
+      new Task(
+        'some random idea',
+        'Description for some random idea',
+        new Date(),
+        new Date(),
+        null,
+        false,
+        null,
+        null
+      ),
+      new Task(
+        'This is random',
+        'Description for This is random',
+        new Date(),
+        new Date(),
+        null,
+        false,
+        null,
+        null
+      ),
+      new Task(
+        'build',
+        'Description for build',
+        new Date(),
+        new Date(),
+        null,
+        false,
+        null,
+        null
+      ),
     ];
 
-    console.log("creating board from scratch");
     this.board = new Board('First Board', [
-      new Column('Today', true, ideasTasks, 1),
-      new Column('Tomorrow', true, [], 2),
-      new Column('This Week', true, [], 3),
-      new Column('Next Week', true, [], 4),
-      new Column('This Month', true, [], 5),
-      new Column('Next Month', true, [], 6),
-      new Column('This Quarter', true, [], 7),
-      new Column('Next Quarter', true, [], 8),
-      new Column('This Year', true, [], 9),
-      new Column('Next Year', true, [], 10),
+      new Column('Today', true, ideasTasks),
+      new Column('Tomorrow', true, []),
+      new Column('This Week', true, []),
+      new Column('Next Week', true, []),
+      new Column('This Month', true, []),
+      new Column('Next Month', true, []),
+      new Column('This Quarter', true, []),
+      new Column('Next Quarter', true, []),
+      new Column('This Year', true, []),
+      new Column('Next Year', true, []),
     ]);
 
     if (isPlatformBrowser(this.platformId)) {
@@ -170,20 +130,40 @@ export class MainViewComponent {
     }
   }
 
+  drop(event: CdkDragDrop<Column[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+    }
+  }
+
   handleBoxAdded(boxName: string): void {
     // Create a new column with the box name
-    const newColumn = new Column(boxName, false, [], 100 + this.board.columns.length);
+    const newColumn = new Column(boxName, false, [], );
 
     // Push the new column to the board
     this.board.columns.push(newColumn);
-
-    localStorage.setItem("board", JSON.stringify(this.board));
+    localStorage.setItem('board', JSON.stringify(this.board));
   }
 
   handleBoxDeleted(column: Column) {
-    const index = this.board.columns.findIndex(c => c === column);
+    const index = this.board.columns.findIndex((c) => c === column);
     if (index !== -1) {
       this.board.columns.splice(index, 1); // Remove the column from the array
     }
+  }
+
+  searchTasks(event: any) {
+    this.searchText = event.target.value;
   }
 }
