@@ -19,6 +19,8 @@
             <app-board [board]="board" (ColumnDeleted)="handleBoxDeleted($event)" (taskAdded)="getAllColumns()" class="example-box" [column]="column"
                 cdkDrag></app-board>
         </ng-container>
+
+        <app-add-box-dialog (boxAdded)="handleBoxAdded($event)"></app-add-box-dialog>
     </div>
 
 </div>
