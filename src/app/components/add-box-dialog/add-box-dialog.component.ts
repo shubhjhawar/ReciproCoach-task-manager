@@ -6,6 +6,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {FormsModule} from '@angular/forms';
 import { EventEmitter } from '@angular/core';
+import { CommonserviceService } from '../../apiService/commonservice.service';
 
  
 @Component({
@@ -43,7 +44,7 @@ export class DialogDataDialog {
   boxName = '';
   @Output() boxAdded: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor(public dialogRef: MatDialogRef<DialogDataDialog>) {}
+  constructor(public dialogRef: MatDialogRef<DialogDataDialog>, private apiService: CommonserviceService) {}
 
   onCancelClick(): void {
     this.dialogRef.close(); // Close the dialog without adding the box
@@ -51,8 +52,19 @@ export class DialogDataDialog {
 
   onAddClick(): void {
     if (this.boxName.trim()) {
-      this.boxAdded.emit(this.boxName); // Emit the new box name to the above component
-      this.dialogRef.close(); // Close the dialog after adding the box
+      this.apiService.createColumn({ name: this.boxName.trim(), inbuilt: true }).subscribe(
+        (response: any) => {
+          if(response) {
+            console.log(response);
+            this.boxAdded.emit(this.boxName); // Emit the new box name to the above component
+            this.dialogRef.close(); // Close the dialog after adding the box
+          }
+        },
+        (error: any) => {
+          console.log(error);
+        }
+      );
+      
     }
   }
 }
