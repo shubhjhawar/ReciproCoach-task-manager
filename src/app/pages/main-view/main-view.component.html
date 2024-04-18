@@ -13,12 +13,15 @@
         </label>
     </div>
 
+    
+
     <div cdkDropList [cdkDropListData]="board.columns" (cdkDropListDropped)="drop($event)"
         class="example-list grid grid-cols-4 max-md:grid-cols-2 max-sm:grid-cols-1 gap-4 p-4 h-full" cdkDropListGroup>
         <ng-container *ngFor="let column of board.columns | searchFilter: searchText: originalBoard">
             <app-board [board]="board" (ColumnDeleted)="handleBoxDeleted($event)" (taskAdded)="getAllColumns()" class="example-box" [column]="column"
                 cdkDrag></app-board>
         </ng-container>
+        <app-add-box-dialog (boxAdded)="getAllColumns()" ></app-add-box-dialog>
     </div>
 
 </div>
